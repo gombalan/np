@@ -100,3 +100,10 @@ func TestMedianInt32(t *testing.T) {
 		t.Errorf("Median of all value in array must be %f", float64(2))
 	}
 }
+
+func TestModeInt32(t *testing.T) {
+	mode, _ := Int32OneDArray{arr: []int32{1, 1, 1, 3, 4}}.Mode()
+	if mode != 1 {
+		t.Errorf("Mode of all value in array must be %d", 1)
+	}
+}

@@ -11,7 +11,6 @@ type Int32OneDArray struct {
 }
 
 func ArangeInt32(start int32, stop int32, step int32) Int32OneDArray {
-	// if reflect.TypeOf(start)
 	if step == 0 {
 		return Int32OneDArray{nil, errors.New(ErrZeroValue)}
 	}
@@ -27,11 +26,11 @@ func ArangeInt32(start int32, stop int32, step int32) Int32OneDArray {
 
 	result := make([]int32, 0, size)
 	if stop > start {
-		for i := start; i < stop; i = i + step {
+		for i := start; i < stop; i += step {
 			result = append(result, i)
 		}
 	} else {
-		for i := start; i > stop; i = i + step {
+		for i := start; i > stop; i += step {
 			result = append(result, i)
 		}
 	}
@@ -48,12 +47,8 @@ func (a Int32OneDArray) Len() (int32, error) {
 }
 
 func (a Int32OneDArray) Max() (int32, error) {
-	if a.err != nil {
-		return 0, a.err
-	}
-
-	if len(a.arr) == 0 {
-		return 0, errors.New(ErrEmptyArray)
+	if err := validateArray(a); err != nil {
+		return 0, err
 	}
 
 	max := a.arr[0]
@@ -67,12 +62,8 @@ func (a Int32OneDArray) Max() (int32, error) {
 }
 
 func (a Int32OneDArray) Min() (int32, error) {
-	if a.err != nil {
-		return 0, a.err
-	}
-
-	if len(a.arr) == 0 {
-		return 0, errors.New(ErrEmptyArray)
+	if err := validateArray(a); err != nil {
+		return 0, err
 	}
 
 	min := a.arr[0]
@@ -86,29 +77,21 @@ func (a Int32OneDArray) Min() (int32, error) {
 }
 
 func (a Int32OneDArray) Sum() (int32, error) {
-	if a.err != nil {
-		return 0, a.err
-	}
-
-	if len(a.arr) == 0 {
-		return 0, errors.New(ErrEmptyArray)
+	if err := validateArray(a); err != nil {
+		return 0, err
 	}
 
 	sum := int32(0)
 	for _, value := range a.arr {
-		sum = sum + value
+		sum += value
 	}
 
 	return sum, nil
 }
 
 func (a Int32OneDArray) Mean() (float64, error) {
-	if a.err != nil {
-		return 0, a.err
-	}
-
-	if len(a.arr) == 0 {
-		return 0, errors.New(ErrEmptyArray)
+	if err := validateArray(a); err != nil {
+		return 0, err
 	}
 
 	sum, _ := a.Sum()
@@ -117,12 +100,8 @@ func (a Int32OneDArray) Mean() (float64, error) {
 }
 
 func (a Int32OneDArray) Median() (float64, error) {
-	if a.err != nil {
-		return 0, a.err
-	}
-
-	if len(a.arr) == 0 {
-		return 0, errors.New(ErrEmptyArray)
+	if err := validateArray(a); err != nil {
+		return 0, err
 	}
 
 	sort.SliceStable(a.arr, func(i, j int) bool { return a.arr[i] < a.arr[j] })
@@ -132,4 +111,39 @@ func (a Int32OneDArray) Median() (float64, error) {
 	}
 
 	return float64(a.arr[len(a.arr)/2]+a.arr[len(a.arr)/2-1]) / 2, nil
+}
+
+func (a Int32OneDArray) Mode() (int32, error) {
+	if err := validateArray(a); err != nil {
+		return 0, err
+	}
+
+	numberMap := make(map[int32]int)
+	count := 0
+	mode := a.arr[0]
+	for _, value := range a.arr {
+		if _, exist := numberMap[value]; !exist {
+			numberMap[value] = 0
+		}
+		numberMap[value]++
+
+		if numberMap[value] > count {
+			count = numberMap[value]
+			mode = value
+		}
+	}
+
+	return mode, nil
+}
+
+func validateArray(a Int32OneDArray) error {
+	if a.err != nil {
+		return a.err
+	}
+
+	if len(a.arr) == 0 {
+		return errors.New(ErrEmptyArray)
+	}
+
+	return nil
 }
