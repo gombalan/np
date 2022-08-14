@@ -75,6 +75,18 @@ func TestMinInt32(t *testing.T) {
 	}
 }
 
+func TestPtpInt32(t *testing.T) {
+	_, err := ArangeInt32(4, 4, 1).Ptp()
+	if err == nil {
+		t.Errorf("There must be an ErrEmptyArray")
+	}
+
+	ptp, _ := ArangeInt32(0, 4, 1).Ptp()
+	if ptp != int32(3) {
+		t.Errorf("Point to point value in array must be %d", 3)
+	}
+}
+
 func TestSumInt32(t *testing.T) {
 	sum, _ := ArangeInt32(0, 4, 1).Sum()
 	if sum != int32(6) {

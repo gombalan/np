@@ -76,6 +76,17 @@ func (a Int32OneDArray) Min() (int32, error) {
 	return min, nil
 }
 
+func (a Int32OneDArray) Ptp() (int32, error) {
+	if err := validateArray(a); err != nil {
+		return 0, err
+	}
+
+	max, _ := a.Max()
+	min, _ := a.Min()
+
+	return max - min, nil
+}
+
 func (a Int32OneDArray) Sum() (int32, error) {
 	if err := validateArray(a); err != nil {
 		return 0, err
