@@ -34,6 +34,10 @@ func Linspace(start float64, stop float64, num int, stopIncluded bool) Float64On
 	return Float64OneDArray{result, step, nil}
 }
 
+func Logspace(start float64, stop float64, num int, base int, stopIncluded bool) Float64OneDArray {
+	return Float64OneDArray{nil, 0, nil}
+}
+
 func Geomspace(start float64, stop float64, num int, stopIncluded bool) Float64OneDArray {
 	if start == 0 {
 		return Float64OneDArray{nil, 0, errors.New(ErrZeroValue)}
@@ -52,9 +56,9 @@ func Geomspace(start float64, stop float64, num int, stopIncluded bool) Float64O
 	}
 
 	result := make([]float64, 0, num)
-	step := root(stop/start, num-1)
+	step := root(stop/start, num)
 	if stopIncluded {
-		step = root(stop/start, num)
+		step = root(stop/start, num-1)
 	}
 
 	for i := 0; i < num; i++ {
