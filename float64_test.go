@@ -75,3 +75,26 @@ func TestGeomspace(t *testing.T) {
 		t.Errorf("There must be an ErrInvalidParameter")
 	}
 }
+
+func TestLogspace(t *testing.T) {
+	res := Logspace(1, 4, 4, 10, true)
+	array := []float64{10, 100, 1000, 10000}
+	for i := range res.arr {
+		if math.Abs(res.arr[i]-array[i]) > 1e-9 {
+			t.Errorf("Element at %d != %f", i, array[i])
+		}
+	}
+
+	res = Logspace(0, 3, 4, 2, true)
+	array = []float64{1, 2, 4, 8}
+	for i := range res.arr {
+		if math.Abs(res.arr[i]-array[i]) > 1e-9 {
+			t.Errorf("Element at %d != %f", i, array[i])
+		}
+	}
+
+	res = Logspace(5, 4, 2, 3, true)
+	if res.err == nil {
+		t.Errorf("There must be an ErrInvalidParameter")
+	}
+}
