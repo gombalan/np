@@ -1,28 +1,25 @@
 package np
 
-import (
-	"fmt"
-	"testing"
-)
+import "testing"
 
 func TestArangeInt32(t *testing.T) {
 	res := ArangeInt32(0, 4, 1)
 	for i := range res.arr {
-		if res.arr[int32(i)] != int32(i) {
+		if res.arr[i] != int32(i) {
 			t.Errorf("Element at %d != %d", i, i)
 		}
 	}
 
 	res = ArangeInt32(1, 4, 1)
 	for i := range res.arr {
-		if res.arr[int32(i)] != 1+int32(i) {
+		if res.arr[i] != 1+int32(i) {
 			t.Errorf("Element at %d != %d", i, i+1)
 		}
 	}
 
 	res = ArangeInt32(1, 4, 2)
 	for i := range res.arr {
-		if res.arr[int32(i)] != 1+2*int32(i) {
+		if res.arr[i] != 1+2*int32(i) {
 			t.Errorf("Element at %d != %d", i, 2*i+1)
 		}
 	}
@@ -70,7 +67,6 @@ func TestMinInt32(t *testing.T) {
 
 	min, _ := ArangeInt32(4, 0, -1).Min()
 	if min != int32(1) {
-		fmt.Println(min)
 		t.Errorf("Minimum value in array must be %d", 1)
 	}
 }
