@@ -149,3 +149,20 @@ func TestZeros(t *testing.T) {
 		t.Errorf("There must be an ErrInvalidParameter")
 	}
 }
+
+func TestFull(t *testing.T) {
+	res := Full(3, 2, 5)
+	array := [][]float64{{5, 5}, {5, 5}, {5, 5}}
+	for i := range array {
+		for j := range array[i] {
+			if math.Abs(res.arr[i][j]-array[i][j]) > 1e-9 {
+				t.Errorf("Element at %d != %f", i, array[i])
+			}
+		}
+	}
+
+	res = Full(-2, 2, 3)
+	if res.err == nil {
+		t.Errorf("There must be an ErrInvalidParameter")
+	}
+}

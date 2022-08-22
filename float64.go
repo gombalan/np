@@ -104,15 +104,7 @@ func Identity(n int) Float64TwoDArray {
 	return Float64TwoDArray{result, nil}
 }
 
-func Ones(nRow int, nCol int) Float64TwoDArray {
-	return homogen(nRow, nCol, 1)
-}
-
-func Zeros(nRow int, nCol int) Float64TwoDArray {
-	return homogen(nRow, nCol, 0)
-}
-
-func homogen(nRow int, nCol int, num float64) Float64TwoDArray {
+func Full(nRow int, nCol int, num float64) Float64TwoDArray {
 	if nRow <= 0 || nCol <= 0 {
 		return Float64TwoDArray{nil, errors.New(ErrInvalidParameter)}
 	}
@@ -129,4 +121,12 @@ func homogen(nRow int, nCol int, num float64) Float64TwoDArray {
 	}
 
 	return Float64TwoDArray{result, nil}
+}
+
+func Ones(nRow int, nCol int) Float64TwoDArray {
+	return Full(nRow, nCol, 1)
+}
+
+func Zeros(nRow int, nCol int) Float64TwoDArray {
+	return Full(nRow, nCol, 0)
 }
