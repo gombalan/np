@@ -105,6 +105,14 @@ func Identity(n int) Float64TwoDArray {
 }
 
 func Ones(nRow int, nCol int) Float64TwoDArray {
+	return homogen(nRow, nCol, 1)
+}
+
+func Zeros(nRow int, nCol int) Float64TwoDArray {
+	return homogen(nRow, nCol, 0)
+}
+
+func homogen(nRow int, nCol int, num float64) Float64TwoDArray {
 	if nRow <= 0 || nCol <= 0 {
 		return Float64TwoDArray{nil, errors.New(ErrInvalidParameter)}
 	}
@@ -114,7 +122,7 @@ func Ones(nRow int, nCol int) Float64TwoDArray {
 	for i := 0; i < nRow; i++ {
 		row := make([]float64, nCol)
 		for j := 0; j < nCol; j++ {
-			row[j] = 1
+			row[j] = num
 		}
 
 		result = append(result, row)

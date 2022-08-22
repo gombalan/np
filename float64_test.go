@@ -132,3 +132,20 @@ func TestOnes(t *testing.T) {
 		t.Errorf("There must be an ErrInvalidParameter")
 	}
 }
+
+func TestZeros(t *testing.T) {
+	res := Zeros(3, 2)
+	array := [][]float64{{0, 0}, {0, 0}, {0, 0}}
+	for i := range array {
+		for j := range array[i] {
+			if math.Abs(res.arr[i][j]-array[i][j]) > 1e-9 {
+				t.Errorf("Element at %d != %f", i, array[i])
+			}
+		}
+	}
+
+	res = Zeros(-2, 2)
+	if res.err == nil {
+		t.Errorf("There must be an ErrInvalidParameter")
+	}
+}
