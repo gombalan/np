@@ -115,3 +115,20 @@ func TestIdentity(t *testing.T) {
 		t.Errorf("There must be an ErrInvalidParameter")
 	}
 }
+
+func TestOnes(t *testing.T) {
+	res := Ones(2, 3)
+	array := [][]float64{{1, 1, 1}, {1, 1, 1}}
+	for i := range array {
+		for j := range array[i] {
+			if math.Abs(res.arr[i][j]-array[i][j]) > 1e-9 {
+				t.Errorf("Element at %d != %f", i, array[i])
+			}
+		}
+	}
+
+	res = Ones(-2, 2)
+	if res.err == nil {
+		t.Errorf("There must be an ErrInvalidParameter")
+	}
+}

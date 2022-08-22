@@ -103,3 +103,22 @@ func Identity(n int) Float64TwoDArray {
 
 	return Float64TwoDArray{result, nil}
 }
+
+func Ones(nRow int, nCol int) Float64TwoDArray {
+	if nRow <= 0 || nCol <= 0 {
+		return Float64TwoDArray{nil, errors.New(ErrInvalidParameter)}
+	}
+
+	result := make([][]float64, 0, nRow)
+
+	for i := 0; i < nRow; i++ {
+		row := make([]float64, nCol)
+		for j := 0; j < nCol; j++ {
+			row[j] = 1
+		}
+
+		result = append(result, row)
+	}
+
+	return Float64TwoDArray{result, nil}
+}
