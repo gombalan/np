@@ -98,3 +98,20 @@ func TestLogspace(t *testing.T) {
 		t.Errorf("There must be an ErrInvalidParameter")
 	}
 }
+
+func TestIdentity(t *testing.T) {
+	res := Identity(2)
+	array := [][]float64{{1, 0}, {0, 1}}
+	for i := range array {
+		for j := range array[i] {
+			if math.Abs(res.arr[i][j]-array[i][j]) > 1e-9 {
+				t.Errorf("Element at %d != %f", i, array[i])
+			}
+		}
+	}
+
+	res = Identity(-2)
+	if res.err == nil {
+		t.Errorf("There must be an ErrInvalidParameter")
+	}
+}

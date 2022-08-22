@@ -11,6 +11,11 @@ type Float64OneDArray struct {
 	err  error
 }
 
+type Float64TwoDArray struct {
+	arr [][]float64
+	err error
+}
+
 func Linspace(start float64, stop float64, num int, stopIncluded bool) Float64OneDArray {
 	if num < 2 {
 		return Float64OneDArray{nil, 0, errors.New(ErrInvalidParameter)}
@@ -77,22 +82,24 @@ func Logspace(start float64, stop float64, num int, base float64, stopIncluded b
 	return Geomspace(start, stop, num, stopIncluded)
 }
 
-func root(a float64, n int) float64 {
-	n1 := n - 1
-	n1f, rn := float64(n1), 1/float64(n)
-	x, x0 := 1., 0.
-	for {
-		potx, t2 := 1/x, a
-		for b := n1; b > 0; b >>= 1 {
-			if b&1 == 1 {
-				t2 *= potx
-			}
-			potx *= potx
-		}
-		x0, x = x, rn*(n1f*x+t2)
-		if math.Abs(x-x0)*1e15 < x {
-			break
-		}
+func Identity(n int) Float64TwoDArray {
+	if n <= 0 {
+		return Float64TwoDArray{nil, errors.New(ErrInvalidParameter)}
 	}
-	return x
+
+	result := make([][]float64, 0, n)
+
+	for i := 0; i < n; i++ {
+		row := make([]float64, n)
+		for j := 0; j < n; j++ {
+			row[j] = 0
+			if j == i {
+				row[j] = 1
+			}
+		}
+
+		result = append(result, row)
+	}
+
+	return Float64TwoDArray{result, nil}
 }

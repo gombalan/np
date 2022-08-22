@@ -146,15 +146,3 @@ func (a Int32OneDArray) Mode() (int32, error) {
 
 	return mode, nil
 }
-
-func validateArray(a Int32OneDArray) error {
-	if a.err != nil {
-		return a.err
-	}
-
-	if len(a.arr) == 0 {
-		return errors.New(ErrEmptyArray)
-	}
-
-	return nil
-}
