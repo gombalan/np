@@ -87,7 +87,7 @@ func Identity(n int) Float64TwoDArray {
 		return Float64TwoDArray{nil, errors.New(ErrInvalidParameter)}
 	}
 
-	result := make([][]float64, 0, n)
+	result := make([][]float64, n)
 
 	for i := 0; i < n; i++ {
 		row := make([]float64, n)
@@ -98,7 +98,7 @@ func Identity(n int) Float64TwoDArray {
 			}
 		}
 
-		result = append(result, row)
+		result[i] = row
 	}
 
 	return Float64TwoDArray{result, nil}
@@ -109,7 +109,7 @@ func Full(nRow int, nCol int, num float64) Float64TwoDArray {
 		return Float64TwoDArray{nil, errors.New(ErrInvalidParameter)}
 	}
 
-	result := make([][]float64, 0, nRow)
+	result := make([][]float64, nRow)
 
 	for i := 0; i < nRow; i++ {
 		row := make([]float64, nCol)
@@ -117,7 +117,7 @@ func Full(nRow int, nCol int, num float64) Float64TwoDArray {
 			row[j] = num
 		}
 
-		result = append(result, row)
+		result[i] = row
 	}
 
 	return Float64TwoDArray{result, nil}

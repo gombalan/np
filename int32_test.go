@@ -115,3 +115,15 @@ func TestModeInt32(t *testing.T) {
 		t.Errorf("Mode of all value in array must be %d", 1)
 	}
 }
+
+func TestReshapeInt32(t *testing.T) {
+	arr := Int32OneDArray{arr: []int32{1, 1, 1, 3, 4, 7}}
+	res := arr.Reshape(2, 3)
+	for i := 0; i < 2; i++ {
+		for j := 0; j < 3; j++ {
+			if res.arr[i][j] != arr.arr[i*3+j] {
+				t.Errorf("Element at row %d colum %d must be %d", i, j, arr.arr[i*3+j])
+			}
+		}
+	}
+}

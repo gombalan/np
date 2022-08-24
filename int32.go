@@ -10,6 +10,11 @@ type Int32OneDArray struct {
 	err error
 }
 
+type Int32TwoDArray struct {
+	arr [][]int32
+	err error
+}
+
 func ArangeInt32(start int32, stop int32, step int32) Int32OneDArray {
 	if step == 0 {
 		return Int32OneDArray{nil, errors.New(ErrZeroValue)}
@@ -145,4 +150,29 @@ func (a Int32OneDArray) Mode() (int32, error) {
 	}
 
 	return mode, nil
+}
+
+func (a Int32OneDArray) Reshape(nRow int, nCol int) Int32TwoDArray {
+	if err := validateArray(a); err != nil {
+		return Int32TwoDArray{nil, err}
+	}
+
+	if nRow < 1 || nCol < 1 {
+		return Int32TwoDArray{nil, errors.New(ErrInvalidParameter)}
+	}
+
+	if dim, _ := a.Len(); int(dim) != nRow*nCol {
+		return Int32TwoDArray{nil, errors.New(ErrSizeNotMatch)}
+	}
+
+	result := make([][]int32, nRow)
+	for i := 0; i < nRow; i++ {
+		row := make([]int32, nCol)
+		for j := 0; j < nCol; j++ {
+			row[j] = a.arr[i*nCol+j]
+		}
+		result[i] = row
+	}
+
+	return Int32TwoDArray{result, nil}
 }
