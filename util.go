@@ -25,14 +25,18 @@ func root(a float64, n int) float64 {
 	return x
 }
 
-func validateArray(a Int32OneDArray) error {
-	if a.err != nil {
-		return a.err
+func validateArray(err error, size int) error {
+	if err != nil {
+		return err
 	}
 
-	if len(a.arr) == 0 {
+	if size == 0 {
 		return errors.New(ErrEmptyArray)
 	}
 
 	return nil
+}
+
+func float64Pointer(value float64) *float64 {
+	return &value
 }

@@ -1,6 +1,7 @@
 package np
 
 import (
+	"fmt"
 	"math"
 	"testing"
 )
@@ -99,18 +100,77 @@ func TestLogspace(t *testing.T) {
 	}
 }
 
+func TestEmpty(t *testing.T) {
+	res := Empty(2)
+	array := [][]float64{{0, 0}, {0, 0}}
+	for i := range array {
+		for j := range array[i] {
+			if math.Abs(res.arr[i][j]-array[i][j]) > 1e-9 {
+				t.Errorf("Element at %d != %f", i*2+j, array[i][j])
+			}
+		}
+	}
+
+	res = Empty(-2)
+	if res.err == nil {
+		t.Errorf("There must be an ErrInvalidParameter")
+	}
+}
+
+func TestEmptyLike(t *testing.T) {
+	arr := Float64OneDArray{arr: []float64{1, 1, 1, 3, 4, 7}}
+	res := arr.Reshape(2, 3)
+
+	array := EmptyLike(res).arr
+
+	if len(array) != 2 || len(array[0]) != 3 {
+		t.Errorf("Shape of array must be (%d, %d)", 2, 3)
+	}
+
+	for i := range array {
+		for j := range array[i] {
+			if array[i][j] > 1e-9 {
+				t.Errorf("Element at %d != %f", i*2+j, array[i][j])
+			}
+		}
+	}
+
+	err := EmptyLike(arr.Reshape(3, 3)).err
+	if err == nil {
+		t.Error("There must be ErrSizeNotMatch")
+	}
+}
+
 func TestIdentity(t *testing.T) {
 	res := Identity(2)
 	array := [][]float64{{1, 0}, {0, 1}}
 	for i := range array {
 		for j := range array[i] {
 			if math.Abs(res.arr[i][j]-array[i][j]) > 1e-9 {
-				t.Errorf("Element at %d != %f", i, array[i])
+				t.Errorf("Element at %d != %f", i*2+j, array[i][j])
 			}
 		}
 	}
 
 	res = Identity(-2)
+	if res.err == nil {
+		t.Errorf("There must be an ErrInvalidParameter")
+	}
+}
+
+func TestEye(t *testing.T) {
+	res := Eye(2)
+	fmt.Println(res.arr)
+	array := [][]float64{{1, 1}, {1, 1}}
+	for i := range array {
+		for j := range array[i] {
+			if math.Abs(res.arr[i][j]-array[i][j]) > 1e-9 {
+				t.Errorf("Element at %d != %f", i*2+j, array[i][j])
+			}
+		}
+	}
+
+	res = Eye(-2)
 	if res.err == nil {
 		t.Errorf("There must be an ErrInvalidParameter")
 	}
@@ -122,7 +182,7 @@ func TestOnes(t *testing.T) {
 	for i := range array {
 		for j := range array[i] {
 			if math.Abs(res.arr[i][j]-array[i][j]) > 1e-9 {
-				t.Errorf("Element at %d != %f", i, array[i])
+				t.Errorf("Element at %d != %f", i*3+j, array[i][j])
 			}
 		}
 	}
@@ -139,7 +199,7 @@ func TestZeros(t *testing.T) {
 	for i := range array {
 		for j := range array[i] {
 			if math.Abs(res.arr[i][j]-array[i][j]) > 1e-9 {
-				t.Errorf("Element at %d != %f", i, array[i])
+				t.Errorf("Element at %d != %f", i*2+j, array[i][j])
 			}
 		}
 	}
@@ -156,7 +216,7 @@ func TestFull(t *testing.T) {
 	for i := range array {
 		for j := range array[i] {
 			if math.Abs(res.arr[i][j]-array[i][j]) > 1e-9 {
-				t.Errorf("Element at %d != %f", i, array[i])
+				t.Errorf("Element at %d != %f", i*2+j, array[i][j])
 			}
 		}
 	}
