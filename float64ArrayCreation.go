@@ -140,7 +140,7 @@ func Eye(n int) Float64TwoDArray {
 	return Float64TwoDArray{result, nil}
 }
 
-func Full(nRow int, nCol int, num float64) Float64TwoDArray {
+func Full(nRow int, nCol int, fill_value float64) Float64TwoDArray {
 	if nRow <= 0 || nCol <= 0 {
 		return Float64TwoDArray{nil, errors.New(ErrInvalidParameter)}
 	}
@@ -149,10 +149,27 @@ func Full(nRow int, nCol int, num float64) Float64TwoDArray {
 	for i := 0; i < nRow; i++ {
 		row := make([]float64, nCol)
 		for j := 0; j < nCol; j++ {
-			row[j] = num
+			row[j] = fill_value
 		}
 
 		result[i] = row
+	}
+
+	return Float64TwoDArray{result, nil}
+}
+
+func FullLike(a Float64TwoDArray, fill_value float64) Float64TwoDArray {
+	if err := validateArray(a.err, len(a.arr)); err != nil {
+		return Float64TwoDArray{nil, err}
+	}
+
+	shape, _ := a.Shape()
+	result := make([][]float64, shape.NRow)
+	for i := 0; i < len(result); i++ {
+		result[i] = make([]float64, shape.NCol)
+		for j := 0; j < len(result[i]); j++ {
+			result[i][j] = fill_value
+		}
 	}
 
 	return Float64TwoDArray{result, nil}
@@ -162,6 +179,14 @@ func Ones(nRow int, nCol int) Float64TwoDArray {
 	return Full(nRow, nCol, 1)
 }
 
+func OnesLike(a Float64TwoDArray) Float64TwoDArray {
+	return FullLike(a, 1)
+}
+
 func Zeros(nRow int, nCol int) Float64TwoDArray {
 	return Full(nRow, nCol, 0)
+}
+
+func ZerosLike(a Float64TwoDArray) Float64TwoDArray {
+	return FullLike(a, 0)
 }
