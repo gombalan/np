@@ -1,6 +1,8 @@
 package np
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestReshapeFloat64OneD(t *testing.T) {
 	arr := Float64OneDArray{arr: []float64{1, 1, 1, 3, 4, 7}}
@@ -49,7 +51,7 @@ func TestFlattenFloat64(t *testing.T) {
 	}
 }
 
-func TestReshapeFloat64TwoDay(t *testing.T) {
+func TestReshapeFloat64TwoD(t *testing.T) {
 	arr := Float64OneDArray{arr: []float64{1, 1, 1, 3, 4, 7}}
 	res := arr.Reshape(2, 3)
 	res = res.Reshape(3, 2)
@@ -73,5 +75,22 @@ func TestReshapeFloat64TwoDay(t *testing.T) {
 
 	if res.Reshape(3, 3).err == nil {
 		t.Errorf("There must be ErrNegativeValue")
+	}
+}
+
+func TestTransposeFloat64TwoD(t *testing.T) {
+	arr := Float64OneDArray{arr: []float64{1, 1, 1, 3, 4, 7}}
+	res := arr.Reshape(2, 3).Transpose().Flatten()
+	arr = Float64OneDArray{arr: []float64{1, 3, 1, 4, 1, 7}}
+
+	for i := 0; i < len(arr.arr); i++ {
+		if res.arr[i] != arr.arr[i] {
+			t.Errorf("Element at index %d must be %f", i, arr.arr[i])
+		}
+	}
+
+	res = arr.Reshape(3, 3).Transpose().Flatten()
+	if res.err == nil {
+		t.Errorf("There must be ErrSizeNotMatch")
 	}
 }

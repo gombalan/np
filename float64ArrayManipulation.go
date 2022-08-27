@@ -17,11 +17,10 @@ func (a Float64OneDArray) Reshape(nRow int, nCol int) Float64TwoDArray {
 
 	result := make([][]float64, nRow)
 	for i := 0; i < nRow; i++ {
-		row := make([]float64, nCol)
+		result[i] = make([]float64, nCol)
 		for j := 0; j < nCol; j++ {
-			row[j] = a.arr[i*nCol+j]
+			result[i][j] = a.arr[i*nCol+j]
 		}
-		result[i] = row
 	}
 
 	return Float64TwoDArray{result, nil}
@@ -59,4 +58,21 @@ func (a Float64TwoDArray) Reshape(nRow int, nCol int) Float64TwoDArray {
 	result := a.Flatten().Reshape(nRow, nCol)
 
 	return result
+}
+
+func (a Float64TwoDArray) Transpose() Float64TwoDArray {
+	if err := validateArray(a.err, len(a.arr)); err != nil {
+		return Float64TwoDArray{nil, err}
+	}
+
+	shape, _ := a.Shape()
+	result := make([][]float64, shape.NCol)
+	for i := 0; i < int(shape.NCol); i++ {
+		result[i] = make([]float64, shape.NRow)
+		for j := 0; j < int(shape.NRow); j++ {
+			result[i][j] = a.arr[j][i]
+		}
+	}
+
+	return Float64TwoDArray{result, nil}
 }

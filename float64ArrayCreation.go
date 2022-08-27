@@ -45,7 +45,7 @@ func Geomspace(start float64, stop float64, num int, stopIncluded bool) Float64O
 		return Float64OneDArray{nil, nil, errors.New(ErrInvalidParameter)}
 	}
 
-	result := make([]float64, 0, num)
+	result := make([]float64, num)
 	n := num
 	if stopIncluded {
 		n -= 1
@@ -53,7 +53,7 @@ func Geomspace(start float64, stop float64, num int, stopIncluded bool) Float64O
 	step := root(stop/start, n)
 
 	for i := 0; i < num; i++ {
-		result = append(result, start)
+		result[i] = start
 		start *= step
 	}
 
@@ -105,15 +105,13 @@ func Identity(n int) Float64TwoDArray {
 
 	result := make([][]float64, n)
 	for i := 0; i < n; i++ {
-		row := make([]float64, n)
+		result[i] = make([]float64, n)
 		for j := 0; j < n; j++ {
-			row[j] = 0
+			result[i][j] = 0
 			if j == i {
-				row[j] = 1
+				result[i][j] = 1
 			}
 		}
-
-		result[i] = row
 	}
 
 	return Float64TwoDArray{result, nil}
@@ -126,15 +124,13 @@ func Eye(n int) Float64TwoDArray {
 
 	result := make([][]float64, n)
 	for i := 0; i < n; i++ {
-		row := make([]float64, n)
+		result[i] = make([]float64, n)
 		for j := 0; j < n; j++ {
-			row[j] = 0
+			result[i][j] = 0
 			if j == i || j == n-1-i {
-				row[j] = 1
+				result[i][j] = 1
 			}
 		}
-
-		result[i] = row
 	}
 
 	return Float64TwoDArray{result, nil}
@@ -147,12 +143,10 @@ func Full(nRow int, nCol int, fill_value float64) Float64TwoDArray {
 
 	result := make([][]float64, nRow)
 	for i := 0; i < nRow; i++ {
-		row := make([]float64, nCol)
+		result[i] = make([]float64, nCol)
 		for j := 0; j < nCol; j++ {
-			row[j] = fill_value
+			result[i][j] = fill_value
 		}
-
-		result[i] = row
 	}
 
 	return Float64TwoDArray{result, nil}
