@@ -1,12 +1,12 @@
 package np
 
 type Float64OneDArray struct {
-	arr  []float64
-	step *float64
-	err  error
+	Arr  []float64
+	Step *float64
+	Err  error
 }
 
 type Float64TwoDArray struct {
-	arr [][]float64
-	err error
+	Arr [][]float64
+	Err error
 }

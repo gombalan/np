@@ -2,93 +2,98 @@ package np
 
 import "sort"
 
-func (a Int32OneDArray) Max() (int32, error) {
-	if err := validateArray(a.err, len(a.arr)); err != nil {
-		return 0, err
+func (a Int32OneDArray) Max() (*int32, error) {
+	if err := validateArray(a.Err, len(a.Arr)); err != nil {
+		return nil, err
 	}
 
-	max := a.arr[0]
-	for _, value := range a.arr {
+	max := a.Arr[0]
+	for _, value := range a.Arr {
 		if value > max {
 			max = value
 		}
 	}
 
-	return max, nil
+	return int32Pointer(max), nil
 }
 
-func (a Int32OneDArray) Min() (int32, error) {
-	if err := validateArray(a.err, len(a.arr)); err != nil {
-		return 0, err
+func (a Int32OneDArray) Min() (*int32, error) {
+	if err := validateArray(a.Err, len(a.Arr)); err != nil {
+		return nil, err
 	}
 
-	min := a.arr[0]
-	for _, value := range a.arr {
+	min := a.Arr[0]
+	for _, value := range a.Arr {
 		if value < min {
 			min = value
 		}
 	}
 
-	return min, nil
+	return int32Pointer(min), nil
 }
 
-func (a Int32OneDArray) Ptp() (int32, error) {
-	if err := validateArray(a.err, len(a.arr)); err != nil {
-		return 0, err
+func (a Int32OneDArray) Ptp() (*int32, error) {
+	if err := validateArray(a.Err, len(a.Arr)); err != nil {
+		return nil, err
 	}
 
 	max, _ := a.Max()
 	min, _ := a.Min()
+	ptp := *max - *min
 
-	return max - min, nil
+	return int32Pointer(ptp), nil
 }
 
-func (a Int32OneDArray) Sum() (int32, error) {
-	if err := validateArray(a.err, len(a.arr)); err != nil {
-		return 0, err
+func (a Int32OneDArray) Sum() (*int32, error) {
+	if err := validateArray(a.Err, len(a.Arr)); err != nil {
+		return nil, err
 	}
 
 	sum := int32(0)
-	for _, value := range a.arr {
+	for _, value := range a.Arr {
 		sum += value
 	}
 
-	return sum, nil
+	return int32Pointer(sum), nil
 }
 
-func (a Int32OneDArray) Mean() (float64, error) {
-	if err := validateArray(a.err, len(a.arr)); err != nil {
-		return 0, err
+func (a Int32OneDArray) Mean() (*float64, error) {
+	if err := validateArray(a.Err, len(a.Arr)); err != nil {
+		return nil, err
 	}
 
 	sum, _ := a.Sum()
+	mean := float64(*sum) / float64(len(a.Arr))
 
-	return float64(sum) / float64(len(a.arr)), nil
+	return float64Pointer(mean), nil
 }
 
-func (a Int32OneDArray) Median() (float64, error) {
-	if err := validateArray(a.err, len(a.arr)); err != nil {
-		return 0, err
+func (a Int32OneDArray) Median() (*float64, error) {
+	if err := validateArray(a.Err, len(a.Arr)); err != nil {
+		return nil, err
 	}
 
-	sort.SliceStable(a.arr, func(i, j int) bool { return a.arr[i] < a.arr[j] })
+	sort.SliceStable(a.Arr, func(i, j int) bool { return a.Arr[i] < a.Arr[j] })
 
-	if len(a.arr)%2 != 0 {
-		return float64(a.arr[len(a.arr)/2]), nil
+	median := float64(0)
+	if len(a.Arr)%2 != 0 {
+		median = float64(a.Arr[len(a.Arr)/2])
+		return float64Pointer(median), nil
 	}
 
-	return float64(a.arr[len(a.arr)/2]+a.arr[len(a.arr)/2-1]) / 2, nil
+	median = float64(a.Arr[len(a.Arr)/2]+a.Arr[len(a.Arr)/2-1]) / 2
+	return float64Pointer(median), nil
 }
 
-func (a Int32OneDArray) Mode() (int32, error) {
-	if err := validateArray(a.err, len(a.arr)); err != nil {
-		return 0, err
+func (a Int32OneDArray) Mode() (*int32, error) {
+	if err := validateArray(a.Err, len(a.Arr)); err != nil {
+		return nil, err
 	}
 
 	numberMap := make(map[int32]int)
 	count := 0
-	mode := a.arr[0]
-	for _, value := range a.arr {
+	mode := a.Arr[0]
+	for _, value := range a.Arr {
 		if _, exist := numberMap[value]; !exist {
 			numberMap[value] = 0
 		}
@@ -100,5 +105,5 @@ func (a Int32OneDArray) Mode() (int32, error) {
 		}
 	}
 
-	return mode, nil
+	return int32Pointer(mode), nil
 }

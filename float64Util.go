@@ -1,37 +1,37 @@
 package np
 
 type Shape2D struct {
-	NRow int32
-	NCol int32
+	NRow *int
+	NCol *int
 }
 
-func (a Float64OneDArray) Len() (int32, error) {
-	if a.err != nil {
-		return 0, a.err
+func (a Float64OneDArray) Len() (*int, error) {
+	if a.Err != nil {
+		return nil, a.Err
 	}
 
-	return int32(len(a.arr)), nil
+	return intPointer(len(a.Arr)), nil
 }
 
 func (a Float64TwoDArray) Shape() (Shape2D, error) {
-	if err := validateArray(a.err, len(a.arr)); err != nil {
+	if err := validateArray(a.Err, len(a.Arr)); err != nil {
 		return Shape2D{}, err
 	}
 
 	shape := Shape2D{}
-	shape.NCol = int32(len(a.arr[0]))
-	shape.NRow = int32(len(a.arr))
+	shape.NCol = intPointer(len(a.Arr[0]))
+	shape.NRow = intPointer(len(a.Arr))
 
 	return shape, nil
 }
 
-func (a Float64TwoDArray) Size() (int32, error) {
-	if err := validateArray(a.err, len(a.arr)); err != nil {
-		return 0, err
+func (a Float64TwoDArray) Size() (*int, error) {
+	if err := validateArray(a.Err, len(a.Arr)); err != nil {
+		return nil, err
 	}
 
 	shape, _ := a.Shape()
-	size := shape.NCol * shape.NRow
+	size := *shape.NCol * *shape.NRow
 
-	return size, nil
+	return intPointer(size), nil
 }

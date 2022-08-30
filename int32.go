@@ -1,11 +1,11 @@
 package np
 
 type Int32OneDArray struct {
-	arr []int32
-	err error
+	Arr []int32
+	Err error
 }
 
 type Int32TwoDArray struct {
-	arr [][]int32
-	err error
+	Arr [][]int32
+	Err error
 }

@@ -5,8 +5,8 @@ import (
 )
 
 func TestLenFloat64(t *testing.T) {
-	res, _ := Linspace(0, 4, 5, false).Len()
-	if res != 5 {
+	len, _ := Linspace(0, 4, 5, false).Len()
+	if *len != 5 {
 		t.Errorf("Length of array must be %d", 5)
 	}
 
@@ -16,11 +16,11 @@ func TestLenFloat64(t *testing.T) {
 }
 
 func TestShapeFloat64(t *testing.T) {
-	arr := Float64OneDArray{arr: []float64{1, 1, 1, 3, 4, 7}}
+	arr := Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7}}
 	res := arr.Reshape(2, 3)
 
 	shape, _ := res.Shape()
-	if shape.NCol != 3 || shape.NRow != 2 {
+	if *shape.NCol != 3 || *shape.NRow != 2 {
 		t.Errorf("Shape of array must be [%d, %d]", shape.NCol, shape.NRow)
 	}
 
@@ -31,9 +31,9 @@ func TestShapeFloat64(t *testing.T) {
 }
 
 func TestSizeFloat64(t *testing.T) {
-	arr := Float64OneDArray{arr: []float64{1, 1, 1, 3, 4, 7}}
+	arr := Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7}}
 	res := arr.Reshape(2, 3)
-	if size, _ := res.Size(); size != 6 {
+	if size, _ := res.Size(); size != nil && *size != 6 {
 		t.Errorf("Size should be %d", 6)
 	}
 

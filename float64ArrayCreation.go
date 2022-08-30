@@ -85,14 +85,14 @@ func Empty(n int) Float64TwoDArray {
 }
 
 func EmptyLike(a Float64TwoDArray) Float64TwoDArray {
-	if err := validateArray(a.err, len(a.arr)); err != nil {
+	if err := validateArray(a.Err, len(a.Arr)); err != nil {
 		return Float64TwoDArray{nil, err}
 	}
 
 	shape, _ := a.Shape()
-	result := make([][]float64, shape.NRow)
+	result := make([][]float64, *shape.NRow)
 	for i := 0; i < len(result); i++ {
-		result[i] = make([]float64, shape.NCol)
+		result[i] = make([]float64, *shape.NCol)
 	}
 
 	return Float64TwoDArray{result, nil}
@@ -153,14 +153,14 @@ func Full(nRow int, nCol int, fill_value float64) Float64TwoDArray {
 }
 
 func FullLike(a Float64TwoDArray, fill_value float64) Float64TwoDArray {
-	if err := validateArray(a.err, len(a.arr)); err != nil {
+	if err := validateArray(a.Err, len(a.Arr)); err != nil {
 		return Float64TwoDArray{nil, err}
 	}
 
 	shape, _ := a.Shape()
-	result := make([][]float64, shape.NRow)
+	result := make([][]float64, *shape.NRow)
 	for i := 0; i < len(result); i++ {
-		result[i] = make([]float64, shape.NCol)
+		result[i] = make([]float64, *shape.NCol)
 		for j := 0; j < len(result[i]); j++ {
 			result[i][j] = fill_value
 		}
