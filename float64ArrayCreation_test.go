@@ -176,6 +176,23 @@ func TestEye(t *testing.T) {
 	}
 }
 
+func TestFull(t *testing.T) {
+	res := Full(3, 2, 5)
+	array := [][]float64{{5, 5}, {5, 5}, {5, 5}}
+	for i := range array {
+		for j := range array[i] {
+			if math.Abs(res.Arr[i][j]-array[i][j]) > 1e-9 {
+				t.Errorf("Element at %d != %f", i*2+j, array[i][j])
+			}
+		}
+	}
+
+	res = Full(-2, 2, 3)
+	if res.Err == nil {
+		t.Errorf("There must be an ErrInvalidParameter")
+	}
+}
+
 func TestOnes(t *testing.T) {
 	res := Ones(2, 3)
 	array := [][]float64{{1, 1, 1}, {1, 1, 1}}
@@ -210,9 +227,10 @@ func TestZeros(t *testing.T) {
 	}
 }
 
-func TestFull(t *testing.T) {
-	res := Full(3, 2, 5)
-	array := [][]float64{{5, 5}, {5, 5}, {5, 5}}
+func TestFullLike(t *testing.T) {
+	arr := Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7}}.Reshape(2, 3)
+	res := FullLike(arr, 5)
+	array := [][]float64{{5, 5, 5}, {5, 5, 5}}
 	for i := range array {
 		for j := range array[i] {
 			if math.Abs(res.Arr[i][j]-array[i][j]) > 1e-9 {
@@ -221,8 +239,47 @@ func TestFull(t *testing.T) {
 		}
 	}
 
-	res = Full(-2, 2, 3)
+	arr = Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7}}.Reshape(3, 3)
+	res = FullLike(arr, 5)
 	if res.Err == nil {
-		t.Errorf("There must be an ErrInvalidParameter")
+		t.Errorf("There must be an ErrSizeNotMatch")
+	}
+}
+
+func TestOnesLike(t *testing.T) {
+	arr := Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7}}.Reshape(2, 3)
+	res := OnesLike(arr)
+	array := [][]float64{{1, 1, 1}, {1, 1, 1}}
+	for i := range array {
+		for j := range array[i] {
+			if math.Abs(res.Arr[i][j]-array[i][j]) > 1e-9 {
+				t.Errorf("Element at %d != %f", i*2+j, array[i][j])
+			}
+		}
+	}
+
+	arr = Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7}}.Reshape(3, 3)
+	res = OnesLike(arr)
+	if res.Err == nil {
+		t.Errorf("There must be an ErrSizeNotMatch")
+	}
+}
+
+func TestZerosLike(t *testing.T) {
+	arr := Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7}}.Reshape(2, 3)
+	res := ZerosLike(arr)
+	array := [][]float64{{0, 0, 0}, {0, 0, 0}}
+	for i := range array {
+		for j := range array[i] {
+			if math.Abs(res.Arr[i][j]-array[i][j]) > 1e-9 {
+				t.Errorf("Element at %d != %f", i*2+j, array[i][j])
+			}
+		}
+	}
+
+	arr = Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7}}.Reshape(3, 3)
+	res = ZerosLike(arr)
+	if res.Err == nil {
+		t.Errorf("There must be an ErrSizeNotMatch")
 	}
 }
