@@ -1,7 +1,6 @@
 package np
 
 import (
-	"errors"
 	"math"
 )
 
@@ -31,7 +30,7 @@ func validateArray(err error, size int) error {
 	}
 
 	if size == 0 {
-		return errors.New(ErrEmptyArray)
+		return newError(ErrEmptyArray, "please check how array is defined or manipulated before")
 	}
 
 	return nil

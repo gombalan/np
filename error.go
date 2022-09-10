@@ -7,41 +7,37 @@ import (
 )
 
 const (
-	ErrZeroValue        string = "value must be non-zero"
-	ErrNegativeValue    string = "value must be positive"
-	ErrInvalidParameter string = "one or more parameters are invalid"
-	ErrEmptyArray       string = "array is empty"
-	ErrSizeNotMatch     string = "array size is not match"
+	ErrZeroValue           string = "value is zero"
+	ErrNegativeValue       string = "value is negative"
+	ErrZeroOrNegativeValue string = "value is zero or negative"
+	ErrInvalidParameter    string = "one or more parameters are invalid"
+	ErrEmptyArray          string = "array is empty"
+	ErrSizeNotMatch        string = "array size is not matched"
 )
 
-func newError(message string, args ...arg) error {
-	return create(nil, message, args)
+func newError(errCode string, errDescription string) error {
+	return createError(nil, errCode+": "+errDescription)
 }
 
-// func propagate(cause error, message string) error {
-// 	if cause == nil {
-// 		return nil
-// 	}
-// 	return create(cause, message)
-// }
+func propagateError(cause error, errDescription string) error {
+	if cause == nil {
+		return nil
+	}
+	return createError(cause, errDescription)
+}
 
 type npError struct {
-	message  string
-	cause    error
-	file     string
-	function string
-	line     int
+	description string
+	cause       error
+	file        string
+	function    string
+	line        int
 }
 
-type arg struct {
-	key   string
-	value interface{}
-}
-
-func create(cause error, message string, args []arg) error {
+func createError(cause error, description string) error {
 	err := &npError{
-		message: fmt.Sprintf("%s: %v", message, args),
-		cause:   cause,
+		description: description,
+		cause:       cause,
 	}
 
 	pc, file, line, ok := runtime.Caller(2)

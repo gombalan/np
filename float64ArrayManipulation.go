@@ -1,18 +1,20 @@
 package np
 
-import "errors"
+import (
+	"fmt"
+)
 
 func (a Float64OneDArray) Reshape(nRow int, nCol int) Float64TwoDArray {
 	if err := validateArray(a.Err, len(a.Arr)); err != nil {
-		return Float64TwoDArray{nil, err}
+		return Float64TwoDArray{nil, propagateError(err, "failed to reshape array")}
 	}
 
-	if nRow < 1 || nCol < 1 {
-		return Float64TwoDArray{nil, errors.New(ErrNegativeValue)}
+	if nRow <= 0 || nCol <= 0 {
+		return Float64TwoDArray{nil, newError(ErrZeroOrNegativeValue, fmt.Sprintf("value of nRow: %v and nCol: %v should be greater than zero", nRow, nCol))}
 	}
 
 	if len, _ := a.Len(); len != nil && *len != nRow*nCol {
-		return Float64TwoDArray{nil, errors.New(ErrSizeNotMatch)}
+		return Float64TwoDArray{nil, newError(ErrSizeNotMatch, fmt.Sprintf("value of nRow: %v times nCol: %v should be equal to original array's dimension", nRow, nCol))}
 	}
 
 	result := make([][]float64, nRow)
@@ -28,7 +30,7 @@ func (a Float64OneDArray) Reshape(nRow int, nCol int) Float64TwoDArray {
 
 func (a Float64TwoDArray) Flatten() Float64OneDArray {
 	if err := validateArray(a.Err, len(a.Arr)); err != nil {
-		return Float64OneDArray{nil, nil, err}
+		return Float64OneDArray{nil, propagateError(err, "failed to flatten array")}
 	}
 
 	shape, _ := a.Shape()
@@ -39,20 +41,20 @@ func (a Float64TwoDArray) Flatten() Float64OneDArray {
 		result[i] = a.Arr[i/(*shape.NCol)][i%(*shape.NCol)]
 	}
 
-	return Float64OneDArray{result, nil, nil}
+	return Float64OneDArray{result, nil}
 }
 
 func (a Float64TwoDArray) Reshape(nRow int, nCol int) Float64TwoDArray {
 	if err := validateArray(a.Err, len(a.Arr)); err != nil {
-		return Float64TwoDArray{nil, err}
+		return Float64TwoDArray{nil, propagateError(err, "failed to reshape array")}
 	}
 
-	if nRow < 1 || nCol < 1 {
-		return Float64TwoDArray{nil, errors.New(ErrInvalidParameter)}
+	if nRow <= 0 || nCol <= 0 {
+		return Float64TwoDArray{nil, newError(ErrZeroOrNegativeValue, fmt.Sprintf("value of nRow: %v and nCol: %v should be greater than zero", nRow, nCol))}
 	}
 
 	if size, _ := a.Size(); size != nil && *size != nRow*nCol {
-		return Float64TwoDArray{nil, errors.New(ErrSizeNotMatch)}
+		return Float64TwoDArray{nil, newError(ErrSizeNotMatch, fmt.Sprintf("value of nRow: %v times nCol: %v should be equal to original array's dimension", nRow, nCol))}
 	}
 
 	result := a.Flatten().Reshape(nRow, nCol)
@@ -62,7 +64,7 @@ func (a Float64TwoDArray) Reshape(nRow int, nCol int) Float64TwoDArray {
 
 func (a Float64TwoDArray) Transpose() Float64TwoDArray {
 	if err := validateArray(a.Err, len(a.Arr)); err != nil {
-		return Float64TwoDArray{nil, err}
+		return Float64TwoDArray{nil, propagateError(err, "failed to transpose array")}
 	}
 
 	shape, _ := a.Shape()

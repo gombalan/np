@@ -1,6 +1,8 @@
 package np
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestArange(t *testing.T) {
 	res := Arange(0, 4, 1)
