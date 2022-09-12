@@ -152,3 +152,40 @@ func (a Float64TwoDArray) Triu(k int) Float64TwoDArray {
 
 	return Float64TwoDArray{result, nil}
 }
+
+func (a Float64TwoDArray) Tril(k int) Float64TwoDArray {
+	if err := validateArray(a.Err, len(a.Arr)); err != nil {
+		return Float64TwoDArray{nil, propagateError(err, "failed to create upper triangle of array")}
+	}
+
+	shape, _ := a.Shape()
+	if *shape.NCol != *shape.NRow {
+		return Float64TwoDArray{nil, newError(ErrNonRectangularArray, fmt.Sprintf("array should be rectangular, but value of nRow: %v and nCol: %v are different", *shape.NRow, *shape.NCol))}
+	}
+
+	if k > 0 {
+		if k >= *shape.NCol {
+			return Float64TwoDArray{nil, newError(ErrInvalidParameter, fmt.Sprintf("value of k: %v should be less than nRow: %v", k, *shape.NRow))}
+		}
+	}
+
+	if k < 0 {
+		if -k >= *shape.NCol {
+			return Float64TwoDArray{nil, newError(ErrInvalidParameter, fmt.Sprintf("value of -k: %v should be less than nRow: %v", k, -1*(*shape.NRow)))}
+		}
+	}
+
+	result := make([][]float64, *shape.NRow)
+	for i := 0; i < *shape.NRow; i++ {
+		result[i] = make([]float64, *shape.NCol)
+		for j := 0; j < *shape.NCol; j++ {
+			if (i-k >= 0 || i == 0) && j <= i+k {
+				result[i][j] = a.Arr[i][j]
+			} else {
+				result[i][j] = 0
+			}
+		}
+	}
+
+	return Float64TwoDArray{result, nil}
+}

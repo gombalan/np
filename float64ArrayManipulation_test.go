@@ -208,3 +208,62 @@ func TestTriuFloat64TwoD(t *testing.T) {
 		t.Errorf("There must be ErrInvalidParameter")
 	}
 }
+
+func TestTrilFloat64TwoD(t *testing.T) {
+	res := Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7, 2, 6, 4}}.Reshape(3, 3).Tril(0)
+	arr := Float64OneDArray{Arr: []float64{1, 0, 0, 3, 4, 0, 2, 6, 4}}.Reshape(3, 3)
+
+	nRow, nCol := len(arr.Arr), len(arr.Arr)
+	for i := 0; i < nRow; i++ {
+		for j := 0; j < nCol; j++ {
+			if math.Abs(res.Arr[i][j]-arr.Arr[i][j]) > 1e-9 {
+				fmt.Println(res.Arr, arr.Arr)
+				t.Errorf("Element at row %d and column %d must be %f", i, j, arr.Arr[i][j])
+			}
+		}
+	}
+
+	res = Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7, 2, 6, 4}}.Reshape(3, 3).Tril(1)
+	arr = Float64OneDArray{Arr: []float64{1, 1, 0, 3, 4, 7, 2, 6, 4}}.Reshape(3, 3)
+
+	for i := 0; i < nRow; i++ {
+		for j := 0; j < nCol; j++ {
+			if math.Abs(res.Arr[i][j]-arr.Arr[i][j]) > 1e-9 {
+				fmt.Println(res.Arr, arr.Arr)
+				t.Errorf("Element at row %d and column %d must be %f", i, j, arr.Arr[i][j])
+			}
+		}
+	}
+
+	res = Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7, 2, 6, 4}}.Reshape(3, 3).Tril(-1)
+	arr = Float64OneDArray{Arr: []float64{0, 0, 0, 3, 0, 0, 2, 6, 0}}.Reshape(3, 3)
+
+	for i := 0; i < nRow; i++ {
+		for j := 0; j < nCol; j++ {
+			if math.Abs(res.Arr[i][j]-arr.Arr[i][j]) > 1e-9 {
+				fmt.Println(res.Arr, arr.Arr)
+				t.Errorf("Element at row %d and column %d must be %f", i, j, arr.Arr[i][j])
+			}
+		}
+	}
+
+	res = Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7, 2, 6, 4}}.Reshape(4, 3).Tril(0)
+	if res.Err == nil {
+		t.Errorf("There must be ErrSizeNotMatch")
+	}
+
+	res = Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7, 2, 6, 4, 7, 5, 8}}.Reshape(4, 3).Tril(0)
+	if res.Err == nil {
+		t.Errorf("There must be ErrNonRectangularArray")
+	}
+
+	res = Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7, 2, 6, 4}}.Reshape(3, 3).Tril(-5)
+	if res.Err == nil {
+		t.Errorf("There must be ErrInvalidParameter")
+	}
+
+	res = Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7, 2, 6, 4}}.Reshape(3, 3).Tril(5)
+	if res.Err == nil {
+		t.Errorf("There must be ErrInvalidParameter")
+	}
+}
