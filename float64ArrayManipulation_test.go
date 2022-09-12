@@ -1,6 +1,7 @@
 package np
 
 import (
+	"math"
 	"testing"
 )
 
@@ -92,5 +93,59 @@ func TestTransposeFloat64TwoD(t *testing.T) {
 	res = arr.Reshape(3, 3).Transpose().Flatten()
 	if res.Err == nil {
 		t.Errorf("There must be ErrSizeNotMatch")
+	}
+}
+
+func TestDiagFloat64TwoD(t *testing.T) {
+	arr := Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7, 2, 6, 4}}
+	res := arr.Reshape(3, 3).Diag(0)
+	arr = Float64OneDArray{Arr: []float64{1, 4, 4}}
+
+	for i := 0; i < len(arr.Arr); i++ {
+		if math.Abs(res.Arr[i]-arr.Arr[i]) > 1e-9 {
+			t.Errorf("Element at index %d must be %f", i, arr.Arr[i])
+		}
+	}
+
+	arr = Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7, 2, 6, 4}}
+	res = arr.Reshape(3, 3).Diag(1)
+	arr = Float64OneDArray{Arr: []float64{1, 7}}
+
+	for i := 0; i < len(arr.Arr); i++ {
+		if math.Abs(res.Arr[i]-arr.Arr[i]) > 1e-9 {
+			t.Errorf("Element at index %d must be %f", i, arr.Arr[i])
+		}
+	}
+
+	arr = Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7, 2, 6, 4}}
+	res = arr.Reshape(3, 3).Diag(-1)
+	arr = Float64OneDArray{Arr: []float64{3, 6}}
+
+	for i := 0; i < len(arr.Arr); i++ {
+		if math.Abs(res.Arr[i]-arr.Arr[i]) > 1e-9 {
+			t.Errorf("Element at index %d must be %f", i, arr.Arr[i])
+		}
+	}
+
+	arr = Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7, 2, 6, 4}}
+	res = arr.Reshape(4, 3).Diag(0)
+	if res.Err == nil {
+		t.Errorf("There must be ErrSizeNotMatch")
+	}
+
+	res = arr.Reshape(3, 3).Diag(4)
+	if res.Err == nil {
+		t.Errorf("There must be ErrInvalidParameter")
+	}
+
+	res = arr.Reshape(3, 3).Diag(-4)
+	if res.Err == nil {
+		t.Errorf("There must be ErrInvalidParameter")
+	}
+
+	arr = Float64OneDArray{Arr: []float64{1, 7, 1, 8, 1, 0, 3, 4, 7, 2, 6, 4}}
+	res = arr.Reshape(4, 3).Diag(0)
+	if res.Err == nil {
+		t.Errorf("There must be ErrNonRectangularArray")
 	}
 }

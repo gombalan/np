@@ -13,6 +13,7 @@ const (
 	ErrInvalidParameter    string = "one or more parameters are invalid"
 	ErrEmptyArray          string = "array is empty"
 	ErrSizeNotMatch        string = "array size is not matched"
+	ErrNonRectangularArray string = "array is non-rectangular"
 )
 
 func newError(errCode string, errDescription string) error {

@@ -14,6 +14,7 @@ func (a Float64OneDArray) Reshape(nRow int, nCol int) Float64TwoDArray {
 	}
 
 	if len, _ := a.Len(); len != nil && *len != nRow*nCol {
+		fmt.Println("HAHAHAHA", *len, a.Arr)
 		return Float64TwoDArray{nil, newError(ErrSizeNotMatch, fmt.Sprintf("value of nRow: %v times nCol: %v should be equal to original array's dimension", nRow, nCol))}
 	}
 
@@ -77,4 +78,40 @@ func (a Float64TwoDArray) Transpose() Float64TwoDArray {
 	}
 
 	return Float64TwoDArray{result, nil}
+}
+
+func (a Float64TwoDArray) Diag(k int) Float64OneDArray {
+	if err := validateArray(a.Err, len(a.Arr)); err != nil {
+		return Float64OneDArray{nil, propagateError(err, "failed to extract array's diagonal")}
+	}
+
+	shape, _ := a.Shape()
+	if *shape.NCol != *shape.NRow {
+		return Float64OneDArray{nil, newError(ErrNonRectangularArray, fmt.Sprintf("array should be rectangular, but value of nRow: %v and nCol: %v are different", *shape.NRow, *shape.NCol))}
+	}
+
+	start, stop, size := 0, *shape.NRow, *shape.NRow
+
+	if k > 0 {
+		if k >= *shape.NCol {
+			return Float64OneDArray{nil, newError(ErrInvalidParameter, fmt.Sprintf("value of k: %v should be less than nRow: %v", k, shape.NRow))}
+		}
+
+		start, stop, size = 0, *shape.NRow-k, *shape.NRow-k
+	}
+
+	if k < 0 {
+		if -k >= *shape.NCol {
+			return Float64OneDArray{nil, newError(ErrInvalidParameter, fmt.Sprintf("value of k: %v should be less than nRow: %v", k, shape.NRow))}
+		}
+
+		start, stop, size = -k, *shape.NRow, *shape.NRow+k
+	}
+
+	res := make([]float64, size)
+	for i := start; i < stop; i++ {
+		res[i-start] = a.Arr[i][i+k]
+	}
+
+	return Float64OneDArray{res, nil}
 }
