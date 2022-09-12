@@ -1,6 +1,7 @@
 package np
 
 import (
+	"fmt"
 	"math"
 	"testing"
 )
@@ -147,5 +148,63 @@ func TestDiagFloat64TwoD(t *testing.T) {
 	res = arr.Reshape(4, 3).Diag(0)
 	if res.Err == nil {
 		t.Errorf("There must be ErrNonRectangularArray")
+	}
+}
+
+func TestTriuFloat64TwoD(t *testing.T) {
+	res := Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7, 2, 6, 4}}.Reshape(3, 3).Triu(0)
+	arr := Float64OneDArray{Arr: []float64{1, 1, 1, 0, 4, 7, 0, 0, 4}}.Reshape(3, 3)
+
+	nRow, nCol := len(arr.Arr), len(arr.Arr)
+	for i := 0; i < nRow; i++ {
+		for j := 0; j < nCol; j++ {
+			if math.Abs(res.Arr[i][j]-arr.Arr[i][j]) > 1e-9 {
+				t.Errorf("Element at row %d and column %d must be %f", i, j, arr.Arr[i][j])
+			}
+		}
+	}
+
+	res = Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7, 2, 6, 4}}.Reshape(3, 3).Triu(1)
+	arr = Float64OneDArray{Arr: []float64{0, 1, 1, 0, 0, 7, 0, 0, 0}}.Reshape(3, 3)
+
+	for i := 0; i < nRow; i++ {
+		for j := 0; j < nCol; j++ {
+			if math.Abs(res.Arr[i][j]-arr.Arr[i][j]) > 1e-9 {
+				fmt.Println(res, arr)
+				t.Errorf("Element at row %d and column %d must be %f", i, j, arr.Arr[i][j])
+			}
+		}
+	}
+
+	res = Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7, 2, 6, 4}}.Reshape(3, 3).Triu(-1)
+	arr = Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7, 0, 6, 4}}.Reshape(3, 3)
+
+	for i := 0; i < nRow; i++ {
+		for j := 0; j < nCol; j++ {
+			if math.Abs(res.Arr[i][j]-arr.Arr[i][j]) > 1e-9 {
+				fmt.Println(res, arr)
+				t.Errorf("Element at row %d and column %d must be %f", i, j, arr.Arr[i][j])
+			}
+		}
+	}
+
+	res = Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7, 2, 6, 4}}.Reshape(4, 3).Triu(0)
+	if res.Err == nil {
+		t.Errorf("There must be ErrSizeNotMatch")
+	}
+
+	res = Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7, 2, 6, 4, 7, 5, 8}}.Reshape(4, 3).Triu(0)
+	if res.Err == nil {
+		t.Errorf("There must be ErrNonRectangularArray")
+	}
+
+	res = Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7, 2, 6, 4}}.Reshape(3, 3).Triu(-5)
+	if res.Err == nil {
+		t.Errorf("There must be ErrInvalidParameter")
+	}
+
+	res = Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7, 2, 6, 4}}.Reshape(3, 3).Triu(5)
+	if res.Err == nil {
+		t.Errorf("There must be ErrInvalidParameter")
 	}
 }
