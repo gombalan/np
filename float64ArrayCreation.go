@@ -184,3 +184,24 @@ func Zeros(nRow int, nCol int) Float64TwoDArray {
 func ZerosLike(a Float64TwoDArray) Float64TwoDArray {
 	return FullLike(a, 0)
 }
+
+func Diag(a Float64OneDArray) Float64TwoDArray {
+	if err := validateArray(a.Err, len(a.Arr)); err != nil {
+		return Float64TwoDArray{nil, propagateError(err, "failed to create full array")}
+	}
+
+	nRow, nCol := len(a.Arr), len(a.Arr)
+	result := make([][]float64, len(a.Arr))
+	for i := 0; i < nRow; i++ {
+		result[i] = make([]float64, nCol)
+		for j := 0; j < nCol; j++ {
+			if i == j {
+				result[i][j] = a.Arr[i]
+			} else {
+				result[i][j] = 0
+			}
+		}
+	}
+
+	return Float64TwoDArray{result, nil}
+}

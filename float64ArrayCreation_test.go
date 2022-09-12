@@ -283,3 +283,22 @@ func TestZerosLike(t *testing.T) {
 		t.Errorf("There must be an ErrSizeNotMatch")
 	}
 }
+
+func TestDiag(t *testing.T) {
+	arr := Float64OneDArray{Arr: []float64{3, 4, 7}}
+	res := Diag(arr)
+	array := [][]float64{{3, 0, 0}, {0, 4, 0}, {0, 0, 7}}
+	for i := range array {
+		for j := range array[i] {
+			if math.Abs(res.Arr[i][j]-array[i][j]) > 1e-9 {
+				t.Errorf("Element at row %d and col %d != %f", i, j, array[i][j])
+			}
+		}
+	}
+
+	arr = Float64OneDArray{}
+	res = Diag(arr)
+	if res.Err == nil {
+		t.Errorf("There must be an ErrEmptyArray")
+	}
+}
