@@ -1,3 +1,3 @@
 # np
 
-**np** tries to emulate, but not necessarily equivalent to, numpy.
+**np** is heavily inspired by python's numpy
