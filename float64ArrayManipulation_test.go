@@ -33,26 +33,6 @@ func TestReshapeFloat64OneD(t *testing.T) {
 	}
 }
 
-func TestFlattenFloat64(t *testing.T) {
-	arr := Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7}}
-	res := arr.Reshape(2, 3).Flatten()
-
-	if len, _ := res.Len(); len != nil && *len != 6 {
-		t.Errorf("Len of the flattened array must be %d", 6)
-	}
-
-	for i := range res.Arr {
-		if res.Arr[i] != arr.Arr[i] {
-			t.Errorf("Element of flattened array at index %d must be %f", i, arr.Arr[i])
-		}
-	}
-
-	res = arr.Reshape(3, 3).Flatten()
-	if _, err := res.Len(); err == nil {
-		t.Errorf("There must be ErrSizeNotMatch")
-	}
-}
-
 func TestReshapeFloat64TwoD(t *testing.T) {
 	arr := Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7}}
 	res := arr.Reshape(2, 3)
@@ -77,6 +57,26 @@ func TestReshapeFloat64TwoD(t *testing.T) {
 
 	if res.Reshape(3, 3).Err == nil {
 		t.Errorf("There must be ErrNegativeValue")
+	}
+}
+
+func TestFlattenFloat64(t *testing.T) {
+	arr := Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7}}
+	res := arr.Reshape(2, 3).Flatten()
+
+	if len, _ := res.Len(); len != nil && *len != 6 {
+		t.Errorf("Len of the flattened array must be %d", 6)
+	}
+
+	for i := range res.Arr {
+		if res.Arr[i] != arr.Arr[i] {
+			t.Errorf("Element of flattened array at index %d must be %f", i, arr.Arr[i])
+		}
+	}
+
+	res = arr.Reshape(3, 3).Flatten()
+	if _, err := res.Len(); err == nil {
+		t.Errorf("There must be ErrSizeNotMatch")
 	}
 }
 

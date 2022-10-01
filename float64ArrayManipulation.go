@@ -29,22 +29,6 @@ func (a Float64OneDArray) Reshape(nRow int, nCol int) Float64TwoDArray {
 	return Float64TwoDArray{result, nil}
 }
 
-func (a Float64TwoDArray) Flatten() Float64OneDArray {
-	if err := validateArray(a.Err, len(a.Arr)); err != nil {
-		return Float64OneDArray{nil, propagateError(err, "failed to flatten array")}
-	}
-
-	shape, _ := a.Shape()
-	size, _ := a.Size()
-
-	result := make([]float64, *size)
-	for i := 0; i < *size; i++ {
-		result[i] = a.Arr[i/(*shape.NCol)][i%(*shape.NCol)]
-	}
-
-	return Float64OneDArray{result, nil}
-}
-
 func (a Float64TwoDArray) Reshape(nRow int, nCol int) Float64TwoDArray {
 	if err := validateArray(a.Err, len(a.Arr)); err != nil {
 		return Float64TwoDArray{nil, propagateError(err, "failed to reshape array")}
@@ -61,6 +45,22 @@ func (a Float64TwoDArray) Reshape(nRow int, nCol int) Float64TwoDArray {
 	result := a.Flatten().Reshape(nRow, nCol)
 
 	return result
+}
+
+func (a Float64TwoDArray) Flatten() Float64OneDArray {
+	if err := validateArray(a.Err, len(a.Arr)); err != nil {
+		return Float64OneDArray{nil, propagateError(err, "failed to flatten array")}
+	}
+
+	shape, _ := a.Shape()
+	size, _ := a.Size()
+
+	result := make([]float64, *size)
+	for i := 0; i < *size; i++ {
+		result[i] = a.Arr[i/(*shape.NCol)][i%(*shape.NCol)]
+	}
+
+	return Float64OneDArray{result, nil}
 }
 
 func (a Float64TwoDArray) Transpose() Float64TwoDArray {

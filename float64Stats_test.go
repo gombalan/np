@@ -80,7 +80,7 @@ func TestMedianInt32(t *testing.T) {
 }
 
 func TestModeInt32(t *testing.T) {
-	mode, _ := Int32OneDArray{Arr: []int32{1, 1, 1, 3, 4}}.Mode()
+	mode, _ := Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4}}.Mode()
 	if *mode != 1 {
 		t.Errorf("Mode of all value in array must be %d", 1)
 	}

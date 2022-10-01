@@ -5,6 +5,34 @@ import (
 	"math"
 )
 
+func Arange(start float64, stop float64, step float64) Float64OneDArray {
+	if step == 0 {
+		return Float64OneDArray{nil, newError(ErrZeroValue, fmt.Sprintf("but, value of step is %v", step))}
+	}
+
+	if start == stop {
+		return Float64OneDArray{nil, newError(ErrInvalidParameter, fmt.Sprintf("value of start: %v and stop: %v must not be equal, but they are", start, stop))}
+	}
+
+	size := math.Ceil((stop - start) / step)
+	if size < 1 {
+		return Float64OneDArray{nil, newError(ErrInvalidParameter, fmt.Sprintf("value of start: %v, stop: %v and step: %v result in non-positive array size", start, stop, step))}
+	}
+
+	result := make([]float64, 0, int(size))
+	if stop > start {
+		for i := start; i < stop; i += step {
+			result = append(result, i)
+		}
+	} else {
+		for i := start; i > stop; i += step {
+			result = append(result, i)
+		}
+	}
+
+	return Float64OneDArray{result, nil}
+}
+
 func Linspace(start float64, stop float64, num int, stopIncluded bool) Float64OneDArray {
 	if num < 2 {
 		return Float64OneDArray{nil, newError(ErrInvalidParameter, fmt.Sprintf("value of num: %v should be greater than 1", num))}

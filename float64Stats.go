@@ -2,7 +2,7 @@ package np
 
 import "sort"
 
-func (a Int32OneDArray) Max() (*int32, error) {
+func (a Float64OneDArray) Max() (*float64, error) {
 	if err := validateArray(a.Err, len(a.Arr)); err != nil {
 		return nil, err
 	}
@@ -14,10 +14,10 @@ func (a Int32OneDArray) Max() (*int32, error) {
 		}
 	}
 
-	return int32Pointer(max), nil
+	return &max, nil
 }
 
-func (a Int32OneDArray) Min() (*int32, error) {
+func (a Float64OneDArray) Min() (*float64, error) {
 	if err := validateArray(a.Err, len(a.Arr)); err != nil {
 		return nil, err
 	}
@@ -29,10 +29,10 @@ func (a Int32OneDArray) Min() (*int32, error) {
 		}
 	}
 
-	return int32Pointer(min), nil
+	return &min, nil
 }
 
-func (a Int32OneDArray) Ptp() (*int32, error) {
+func (a Float64OneDArray) Ptp() (*float64, error) {
 	if err := validateArray(a.Err, len(a.Arr)); err != nil {
 		return nil, err
 	}
@@ -41,23 +41,23 @@ func (a Int32OneDArray) Ptp() (*int32, error) {
 	min, _ := a.Min()
 	ptp := *max - *min
 
-	return int32Pointer(ptp), nil
+	return &ptp, nil
 }
 
-func (a Int32OneDArray) Sum() (*int32, error) {
+func (a Float64OneDArray) Sum() (*float64, error) {
 	if err := validateArray(a.Err, len(a.Arr)); err != nil {
 		return nil, err
 	}
 
-	sum := int32(0)
+	sum := float64(0)
 	for _, value := range a.Arr {
 		sum += value
 	}
 
-	return int32Pointer(sum), nil
+	return &sum, nil
 }
 
-func (a Int32OneDArray) Mean() (*float64, error) {
+func (a Float64OneDArray) Mean() (*float64, error) {
 	if err := validateArray(a.Err, len(a.Arr)); err != nil {
 		return nil, err
 	}
@@ -65,10 +65,10 @@ func (a Int32OneDArray) Mean() (*float64, error) {
 	sum, _ := a.Sum()
 	mean := float64(*sum) / float64(len(a.Arr))
 
-	return float64Pointer(mean), nil
+	return &mean, nil
 }
 
-func (a Int32OneDArray) Median() (*float64, error) {
+func (a Float64OneDArray) Median() (*float64, error) {
 	if err := validateArray(a.Err, len(a.Arr)); err != nil {
 		return nil, err
 	}
@@ -82,15 +82,16 @@ func (a Int32OneDArray) Median() (*float64, error) {
 	}
 
 	median = float64(a.Arr[len(a.Arr)/2]+a.Arr[len(a.Arr)/2-1]) / 2
-	return float64Pointer(median), nil
+
+	return &median, nil
 }
 
-func (a Int32OneDArray) Mode() (*int32, error) {
+func (a Float64OneDArray) Mode() (*float64, error) {
 	if err := validateArray(a.Err, len(a.Arr)); err != nil {
 		return nil, err
 	}
 
-	numberMap := make(map[int32]int)
+	numberMap := make(map[float64]int)
 	count := 0
 	mode := a.Arr[0]
 	for _, value := range a.Arr {
@@ -105,5 +106,5 @@ func (a Int32OneDArray) Mode() (*int32, error) {
 		}
 	}
 
-	return int32Pointer(mode), nil
+	return &mode, nil
 }
