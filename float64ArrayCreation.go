@@ -233,3 +233,24 @@ func Diag(a Float64OneDArray) Float64TwoDArray {
 
 	return Float64TwoDArray{result, nil}
 }
+
+func Vander(a Float64OneDArray, increasing bool) Float64TwoDArray {
+	if err := validateArray(a.Err, len(a.Arr)); err != nil {
+		return Float64TwoDArray{nil, propagateError(err, "failed to create Vandermonde matrix")}
+	}
+
+	nRow, nCol := len(a.Arr), len(a.Arr)
+	result := make([][]float64, len(a.Arr))
+	for i := 0; i < nRow; i++ {
+		result[i] = make([]float64, nCol)
+		for j := 0; j < nCol; j++ {
+			if increasing {
+				result[i][j] = math.Pow(a.Arr[i], float64(j))
+			} else {
+				result[i][j] = math.Pow(a.Arr[i], float64(nCol-1-j))
+			}
+		}
+	}
+
+	return Float64TwoDArray{result, nil}
+}

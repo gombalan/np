@@ -340,3 +340,26 @@ func TestDiag(t *testing.T) {
 		t.Errorf("There must be an ErrEmptyArray")
 	}
 }
+
+func TestVander(t *testing.T) {
+	arr := Float64OneDArray{Arr: []float64{2, 3, 4}}
+	res := Vander(arr, false)
+	array := [][]float64{{4, 2, 1}, {9, 3, 1}, {16, 4, 1}}
+	for i := range array {
+		for j := range array[i] {
+			if math.Abs(res.Arr[i][j]-array[i][j]) > 1e-9 {
+				t.Errorf("Element at row %d and col %d != %f", i, j, array[i][j])
+			}
+		}
+	}
+
+	res = Vander(arr, true)
+	array = [][]float64{{1, 2, 4}, {1, 3, 9}, {1, 4, 16}}
+	for i := range array {
+		for j := range array[i] {
+			if math.Abs(res.Arr[i][j]-array[i][j]) > 1e-9 {
+				t.Errorf("Element at row %d and col %d != %f", i, j, array[i][j])
+			}
+		}
+	}
+}
