@@ -35,15 +35,3 @@ func validateArray(err error, size int) error {
 
 	return nil
 }
-
-func float64Pointer(value float64) *float64 {
-	return &value
-}
-
-func intPointer(value int) *int {
-	return &value
-}
-
-func int32Pointer(value int32) *int32 {
-	return &value
-}

@@ -78,7 +78,7 @@ func (a Float64OneDArray) Median() (*float64, error) {
 	median := float64(0)
 	if len(a.Arr)%2 != 0 {
 		median = float64(a.Arr[len(a.Arr)/2])
-		return float64Pointer(median), nil
+		return &median, nil
 	}
 
 	median = float64(a.Arr[len(a.Arr)/2]+a.Arr[len(a.Arr)/2-1]) / 2

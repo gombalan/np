@@ -9,8 +9,9 @@ func (a Float64OneDArray) Len() (*int, error) {
 	if a.Err != nil {
 		return nil, propagateError(a.Err, "failed to determine array's length")
 	}
+	length := len(a.Arr)
 
-	return intPointer(len(a.Arr)), nil
+	return &length, nil
 }
 
 func (a Float64TwoDArray) Shape() (Shape2D, error) {
@@ -19,8 +20,9 @@ func (a Float64TwoDArray) Shape() (Shape2D, error) {
 	}
 
 	shape := Shape2D{}
-	shape.NCol = intPointer(len(a.Arr[0]))
-	shape.NRow = intPointer(len(a.Arr))
+	nCol, nRow := len(a.Arr[0]), len(a.Arr)
+	shape.NCol = &nCol
+	shape.NRow = &nRow
 
 	return shape, nil
 }
@@ -33,5 +35,5 @@ func (a Float64TwoDArray) Size() (*int, error) {
 	shape, _ := a.Shape()
 	size := *shape.NCol * *shape.NRow
 
-	return intPointer(size), nil
+	return &size, nil
 }
