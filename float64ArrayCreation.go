@@ -241,12 +241,17 @@ func Vander(a Float64OneDArray, increasing bool) Float64TwoDArray {
 
 	nRow, nCol := len(a.Arr), len(a.Arr)
 	result := make([][]float64, len(a.Arr))
-	for i := 0; i < nRow; i++ {
-		result[i] = make([]float64, nCol)
-		for j := 0; j < nCol; j++ {
-			if increasing {
+	if increasing {
+		for i := 0; i < nRow; i++ {
+			result[i] = make([]float64, nCol)
+			for j := 0; j < nCol; j++ {
 				result[i][j] = math.Pow(a.Arr[i], float64(j))
-			} else {
+			}
+		}
+	} else {
+		for i := 0; i < nRow; i++ {
+			result[i] = make([]float64, nCol)
+			for j := 0; j < nCol; j++ {
 				result[i][j] = math.Pow(a.Arr[i], float64(nCol-1-j))
 			}
 		}

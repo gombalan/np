@@ -189,3 +189,63 @@ func (a Float64TwoDArray) Tril(k int) Float64TwoDArray {
 
 	return Float64TwoDArray{result, nil}
 }
+
+func (a Float64TwoDArray) Rot90(k int, fromAxis int, toAxis int) Float64TwoDArray {
+	if err := validateArray(a.Err, len(a.Arr)); err != nil {
+		return Float64TwoDArray{nil, propagateError(err, "failed to rotate array")}
+	}
+
+	if fromAxis == toAxis || fromAxis < 0 || fromAxis > 1 || toAxis < 0 || toAxis > 1 {
+		return Float64TwoDArray{nil, newError(ErrInvalidParameter, fmt.Sprintf("value of fromAxis: %v and toAxis: %v should be different and be either 0 or 1", fromAxis, toAxis))}
+	}
+
+	shape, _ := a.Shape()
+	nRow, nCol := *shape.NRow, *shape.NCol
+	if k%2 == 1 || k%2 == -1 {
+		nRow, nCol = *shape.NCol, *shape.NRow
+	}
+
+	if fromAxis > toAxis {
+		k = -k
+	}
+
+	k = k % 4
+	if k < 0 {
+		k = k + 4
+	}
+
+	switch k {
+	case 1:
+		result := make([][]float64, nRow)
+		for i := 0; i < nRow; i++ {
+			result[i] = make([]float64, nCol)
+			for j := 0; j < nCol; j++ {
+				result[i][j] = a.Arr[j][nCol-i]
+			}
+		}
+
+		return Float64TwoDArray{result, nil}
+	case 2:
+		result := make([][]float64, nRow)
+		for i := 0; i < nRow; i++ {
+			result[i] = make([]float64, nCol)
+			for j := 0; j < nCol; j++ {
+				result[i][j] = a.Arr[nRow-i-1][nCol-j-1]
+			}
+		}
+
+		return Float64TwoDArray{result, nil}
+	case 3:
+		result := make([][]float64, nRow)
+		for i := 0; i < nRow; i++ {
+			result[i] = make([]float64, nCol)
+			for j := 0; j < nCol; j++ {
+				result[i][j] = a.Arr[nCol-j-1][i]
+			}
+		}
+
+		return Float64TwoDArray{result, nil}
+	default:
+		return a
+	}
+}

@@ -267,3 +267,62 @@ func TestTrilFloat64TwoD(t *testing.T) {
 		t.Errorf("There must be ErrInvalidParameter")
 	}
 }
+
+func TestRot90TwoD(t *testing.T) {
+	res := Float64OneDArray{Arr: []float64{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}}.Reshape(3, 4).Rot90(1, 0, 1)
+	res1 := Float64OneDArray{Arr: []float64{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}}.Reshape(3, 4).Rot90(3, 1, 0)
+	arr := Float64OneDArray{Arr: []float64{3, 7, 11, 2, 6, 10, 1, 5, 9, 0, 4, 8}}.Reshape(4, 3)
+
+	shape, _ := arr.Shape()
+	nRow, nCol := *shape.NRow, *shape.NCol
+
+	for i := 0; i < nRow; i++ {
+		for j := 0; j < nCol; j++ {
+			if math.Abs(res.Arr[i][j]-arr.Arr[i][j]) > 1e-9 {
+				t.Errorf("Element at row %d and column %d must be %f", i, j, arr.Arr[i][j])
+			}
+
+			if math.Abs(res1.Arr[i][j]-arr.Arr[i][j]) > 1e-9 {
+				t.Errorf("Element at row %d and column %d must be %f", i, j, arr.Arr[i][j])
+			}
+		}
+	}
+
+	res = Float64OneDArray{Arr: []float64{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}}.Reshape(3, 4).Rot90(2, 0, 1)
+	res1 = Float64OneDArray{Arr: []float64{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}}.Reshape(3, 4).Rot90(2, 1, 0)
+	arr = Float64OneDArray{Arr: []float64{11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0}}.Reshape(3, 4)
+
+	shape, _ = arr.Shape()
+	nRow, nCol = *shape.NRow, *shape.NCol
+
+	for i := 0; i < nRow; i++ {
+		for j := 0; j < nCol; j++ {
+			if math.Abs(res.Arr[i][j]-arr.Arr[i][j]) > 1e-9 {
+				t.Errorf("Element at row %d and column %d must be %f", i, j, arr.Arr[i][j])
+			}
+
+			if math.Abs(res1.Arr[i][j]-arr.Arr[i][j]) > 1e-9 {
+				t.Errorf("Element at row %d and column %d must be %f", i, j, arr.Arr[i][j])
+			}
+		}
+	}
+
+	res = Float64OneDArray{Arr: []float64{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}}.Reshape(3, 4).Rot90(3, 0, 1)
+	res1 = Float64OneDArray{Arr: []float64{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}}.Reshape(3, 4).Rot90(1, 1, 0)
+	arr = Float64OneDArray{Arr: []float64{8, 4, 0, 9, 5, 1, 10, 6, 2, 11, 7, 3}}.Reshape(4, 3)
+
+	shape, _ = arr.Shape()
+	nRow, nCol = *shape.NRow, *shape.NCol
+
+	for i := 0; i < nRow; i++ {
+		for j := 0; j < nCol; j++ {
+			if math.Abs(res.Arr[i][j]-arr.Arr[i][j]) > 1e-9 {
+				t.Errorf("Element at row %d and column %d must be %f", i, j, arr.Arr[i][j])
+			}
+
+			if math.Abs(res1.Arr[i][j]-arr.Arr[i][j]) > 1e-9 {
+				t.Errorf("Element at row %d and column %d must be %f", i, j, arr.Arr[i][j])
+			}
+		}
+	}
+}
