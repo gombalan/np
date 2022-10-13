@@ -33,6 +33,25 @@ func TestReshapeFloat64OneD(t *testing.T) {
 	}
 }
 
+func TestRollFloat64OneD(t *testing.T) {
+	arr := Float64OneDArray{Arr: []float64{1, 2, 3, 4, 5, 6}}
+	res := arr.Roll(2)
+	arr = Float64OneDArray{Arr: []float64{5, 6, 1, 2, 3, 4}}
+	for i := 0; i < 6; i++ {
+		if res.Arr[i] != arr.Arr[i] {
+			t.Errorf("Element at index %d must be %f", i, arr.Arr[i])
+		}
+	}
+
+	res = arr.Roll(-2)
+	arr = Float64OneDArray{Arr: []float64{1, 2, 3, 4, 5, 6}}
+	for i := 0; i < 6; i++ {
+		if res.Arr[i] != arr.Arr[i] {
+			t.Errorf("Element at index %d must be %f", i, arr.Arr[i])
+		}
+	}
+}
+
 func TestReshapeFloat64TwoD(t *testing.T) {
 	arr := Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7}}
 	res := arr.Reshape(2, 3)

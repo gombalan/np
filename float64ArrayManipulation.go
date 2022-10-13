@@ -29,6 +29,30 @@ func (a Float64OneDArray) Reshape(nRow int, nCol int) Float64TwoDArray {
 	return Float64TwoDArray{result, nil}
 }
 
+func (a Float64OneDArray) Roll(k int) Float64OneDArray {
+	if err := validateArray(a.Err, len(a.Arr)); err != nil {
+		return Float64OneDArray{nil, propagateError(err, "failed to roll array")}
+	}
+
+	len, _ := a.Len()
+	k = k % (*len)
+	if k == 0 {
+		return a
+	}
+
+	result := make([]float64, *len)
+	for i := 0; i < *len; i++ {
+		if i-k < 0 {
+			result[i] = a.Arr[(i-k+*len)%(*len)]
+		} else {
+			result[i] = a.Arr[(i-k)%(*len)]
+		}
+
+	}
+
+	return Float64OneDArray{Arr: result}
+}
+
 func (a Float64TwoDArray) Reshape(nRow int, nCol int) Float64TwoDArray {
 	if err := validateArray(a.Err, len(a.Arr)); err != nil {
 		return Float64TwoDArray{nil, propagateError(err, "failed to reshape array")}
