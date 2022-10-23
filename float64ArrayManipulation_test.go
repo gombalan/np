@@ -340,7 +340,7 @@ func TestFlipFloat64TwoD(t *testing.T) {
 	}
 
 	res = arr.Flip(0)
-	arr = Float64OneDArray{Arr: []float64{7, 8, 9, 4, 5, 6, 1, 2, 3}}.Reshape(3, 3)
+	arr = Float64OneDArray{Arr: []float64{3, 2, 1, 6, 5, 4, 9, 8, 7}}.Reshape(3, 3)
 
 	for i := 0; i < nRow; i++ {
 		for j := 0; j < nCol; j++ {
@@ -370,6 +370,36 @@ func TestFlipFloat64TwoD(t *testing.T) {
 	arr = Float64TwoDArray{}
 	if arr.Flip(0).Err == nil {
 		t.Errorf("There must be ErrEmptyArray")
+	}
+}
+
+func TestFliplrFloat64TwoD(t *testing.T) {
+	res := Float64OneDArray{Arr: []float64{1, 2, 3, 4, 5, 6, 7, 8, 9}}.Reshape(3, 3).Fliplr()
+	arr := Float64OneDArray{Arr: []float64{3, 2, 1, 6, 5, 4, 9, 8, 7}}.Reshape(3, 3)
+
+	nRow, nCol := len(arr.Arr), len(arr.Arr)
+	for i := 0; i < nRow; i++ {
+		for j := 0; j < nCol; j++ {
+			if math.Abs(res.Arr[i][j]-arr.Arr[i][j]) > 1e-9 {
+				fmt.Println(res.Arr, arr.Arr)
+				t.Errorf("Element at row %d and column %d must be %f", i, j, arr.Arr[i][j])
+			}
+		}
+	}
+}
+
+func TestFlipudFloat64TwoD(t *testing.T) {
+	res := Float64OneDArray{Arr: []float64{1, 2, 3, 4, 5, 6, 7, 8, 9}}.Reshape(3, 3).Flipud()
+	arr := Float64OneDArray{Arr: []float64{7, 8, 9, 4, 5, 6, 1, 2, 3}}.Reshape(3, 3)
+
+	nRow, nCol := len(arr.Arr), len(arr.Arr)
+	for i := 0; i < nRow; i++ {
+		for j := 0; j < nCol; j++ {
+			if math.Abs(res.Arr[i][j]-arr.Arr[i][j]) > 1e-9 {
+				fmt.Println(res.Arr, arr.Arr)
+				t.Errorf("Element at row %d and column %d must be %f", i, j, arr.Arr[i][j])
+			}
+		}
 	}
 }
 

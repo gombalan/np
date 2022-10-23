@@ -238,9 +238,9 @@ func (a Float64TwoDArray) Flip(k int) Float64TwoDArray {
 		for j := 0; j < *shape.NCol; j++ {
 			switch k {
 			case 0:
-				result[i][j] = a.Arr[i][*shape.NCol-1-j]
-			case 1:
 				result[i][j] = a.Arr[*shape.NRow-1-i][j]
+			case 1:
+				result[i][j] = a.Arr[i][*shape.NCol-1-j]
 			default:
 				result[i][j] = a.Arr[*shape.NRow-1-i][*shape.NCol-1-j]
 			}
@@ -248,6 +248,14 @@ func (a Float64TwoDArray) Flip(k int) Float64TwoDArray {
 	}
 
 	return Float64TwoDArray{result, nil}
+}
+
+func (a Float64TwoDArray) Fliplr() Float64TwoDArray {
+	return a.Flip(1)
+}
+
+func (a Float64TwoDArray) Flipud() Float64TwoDArray {
+	return a.Flip(0)
 }
 
 func (a Float64TwoDArray) Roll(j int, k int) Float64TwoDArray {
