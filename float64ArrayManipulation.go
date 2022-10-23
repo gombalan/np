@@ -6,7 +6,7 @@ import (
 
 func (a Float64OneDArray) Flip() Float64OneDArray {
 	if err := validateArray(a.Err, len(a.Arr)); err != nil {
-		return Float64OneDArray{nil, propagateError(err, "failed to roll array")}
+		return Float64OneDArray{nil, propagateError(err, "failed to flip array")}
 	}
 
 	len, _ := a.Len()
@@ -215,6 +215,34 @@ func (a Float64TwoDArray) Tril(k int) Float64TwoDArray {
 				result[i][j] = a.Arr[i][j]
 			} else {
 				result[i][j] = 0
+			}
+		}
+	}
+
+	return Float64TwoDArray{result, nil}
+}
+
+func (a Float64TwoDArray) Flip(k int) Float64TwoDArray {
+	if err := validateArray(a.Err, len(a.Arr)); err != nil {
+		return Float64TwoDArray{nil, propagateError(err, "failed to flip array")}
+	}
+
+	if k < -1 || k > 1 {
+		return Float64TwoDArray{nil, newError(ErrInvalidParameter, fmt.Sprintf("value of k: %v should between -1 and 1", k))}
+	}
+
+	shape, _ := a.Shape()
+	result := make([][]float64, *shape.NRow)
+	for i := 0; i < *shape.NRow; i++ {
+		result[i] = make([]float64, *shape.NCol)
+		for j := 0; j < *shape.NCol; j++ {
+			switch k {
+			case 0:
+				result[i][j] = a.Arr[i][*shape.NCol-1-j]
+			case 1:
+				result[i][j] = a.Arr[*shape.NRow-1-i][j]
+			default:
+				result[i][j] = a.Arr[*shape.NRow-1-i][*shape.NCol-1-j]
 			}
 		}
 	}
