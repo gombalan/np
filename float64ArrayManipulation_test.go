@@ -6,6 +6,47 @@ import (
 	"testing"
 )
 
+func TestTrimZerosFloat64OneD(t *testing.T) {
+	arr := Float64OneDArray{Arr: []float64{0, 0, 1, 3, 4, 7}}
+	res := Float64OneDArray{Arr: []float64{1, 3, 4, 7}}
+	arr = arr.TrimZeros("f")
+
+	for i := 0; i < len(res.Arr); i++ {
+		if res.Arr[i] != arr.Arr[i] {
+			t.Errorf("Element at index %d must be %f", i, arr.Arr[i])
+		}
+	}
+
+	arr = Float64OneDArray{Arr: []float64{1, 1, 1, 3, 0, 0}}
+	res = Float64OneDArray{Arr: []float64{1, 1, 1, 3}}
+	arr = arr.TrimZeros("b")
+
+	for i := 0; i < len(res.Arr); i++ {
+		if res.Arr[i] != arr.Arr[i] {
+			t.Errorf("Element at index %d must be %f", i, arr.Arr[i])
+		}
+	}
+
+	arr = Float64OneDArray{Arr: []float64{0, 0, 1, 3, 0, 0}}
+	res = Float64OneDArray{Arr: []float64{1, 3}}
+	arr = arr.TrimZeros("fb")
+
+	for i := 0; i < len(res.Arr); i++ {
+		if res.Arr[i] != arr.Arr[i] {
+			t.Errorf("Element at index %d must be %f", i, arr.Arr[i])
+		}
+	}
+
+	if arr.TrimZeros("k").Err == nil {
+		t.Errorf("There must be ErrInvalidParameter")
+	}
+
+	arr = Float64OneDArray{}
+	if arr.TrimZeros("f").Err == nil {
+		t.Errorf("There must be ErrEmptyArray")
+	}
+}
+
 func TestFlipFloat64OneD(t *testing.T) {
 	arr := Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7}}
 	res := arr.Flip()

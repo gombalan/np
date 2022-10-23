@@ -4,6 +4,55 @@ import (
 	"fmt"
 )
 
+func (a Float64OneDArray) TrimZeros(mode string) Float64OneDArray {
+	if err := validateArray(a.Err, len(a.Arr)); err != nil {
+		return Float64OneDArray{nil, propagateError(err, "failed to trim array from zeros")}
+	}
+
+	i, j := 0, len(a.Arr)-1
+	switch mode {
+	case "f":
+		for i < len(a.Arr) {
+			if a.Arr[i] != 0 {
+				break
+			}
+			i++
+		}
+
+		result := a.Arr[i:]
+		return Float64OneDArray{result, nil}
+	case "b":
+		for j >= 0 {
+			if a.Arr[j] != 0 {
+				break
+			}
+			j--
+		}
+
+		result := a.Arr[:j+1]
+		return Float64OneDArray{result, nil}
+	case "fb":
+		for i < len(a.Arr) {
+			if a.Arr[i] != 0 {
+				break
+			}
+			i++
+		}
+
+		for j >= 0 {
+			if a.Arr[j] != 0 {
+				break
+			}
+			j--
+		}
+
+		result := a.Arr[i : j+1]
+		return Float64OneDArray{result, nil}
+	default:
+		return Float64OneDArray{nil, newError(ErrInvalidParameter, fmt.Sprintf("value of mode: %v must be one of 'f', 'b', or 'fb'", mode))}
+	}
+}
+
 func (a Float64OneDArray) Flip() Float64OneDArray {
 	if err := validateArray(a.Err, len(a.Arr)); err != nil {
 		return Float64OneDArray{nil, propagateError(err, "failed to flip array")}
