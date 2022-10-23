@@ -4,6 +4,20 @@ import (
 	"fmt"
 )
 
+func (a Float64OneDArray) Flip() Float64OneDArray {
+	if err := validateArray(a.Err, len(a.Arr)); err != nil {
+		return Float64OneDArray{nil, propagateError(err, "failed to roll array")}
+	}
+
+	len, _ := a.Len()
+	result := make([]float64, *len)
+	for i := 0; i < *len; i++ {
+		result[i] = a.Arr[*len-1-i]
+	}
+
+	return Float64OneDArray{Arr: result}
+}
+
 func (a Float64OneDArray) Reshape(nRow int, nCol int) Float64TwoDArray {
 	if err := validateArray(a.Err, len(a.Arr)); err != nil {
 		return Float64TwoDArray{nil, propagateError(err, "failed to reshape array")}
@@ -14,7 +28,6 @@ func (a Float64OneDArray) Reshape(nRow int, nCol int) Float64TwoDArray {
 	}
 
 	if len, _ := a.Len(); len != nil && *len != nRow*nCol {
-		fmt.Println("HAHAHAHA", *len, a.Arr)
 		return Float64TwoDArray{nil, newError(ErrSizeNotMatch, fmt.Sprintf("value of nRow: %v times nCol: %v should be equal to original array's dimension", nRow, nCol))}
 	}
 

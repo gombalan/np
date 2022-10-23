@@ -6,6 +6,23 @@ import (
 	"testing"
 )
 
+func TestFlipFloat64OneD(t *testing.T) {
+	arr := Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7}}
+	res := arr.Flip()
+	arr = Float64OneDArray{Arr: []float64{7, 4, 3, 1, 1, 1}}
+
+	for i := 0; i < 6; i++ {
+		if res.Arr[i] != arr.Arr[i] {
+			t.Errorf("Element at index %d must be %f", i, arr.Arr[i])
+		}
+	}
+
+	arr = Float64OneDArray{}
+	if arr.Flip().Err == nil {
+		t.Errorf("There must be ErrEmptyArray")
+	}
+}
+
 func TestReshapeFloat64OneD(t *testing.T) {
 	arr := Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7}}
 	res := arr.Reshape(2, 3)
@@ -71,7 +88,6 @@ func TestRollFloat64OneD(t *testing.T) {
 	if arr.Roll(3).Err == nil {
 		t.Errorf("There must be ErrEmptyArray")
 	}
-
 }
 
 func TestReshapeFloat64TwoD(t *testing.T) {
@@ -321,6 +337,21 @@ func TestRollFloat64TwoD(t *testing.T) {
 				t.Errorf("Element at row %d and column %d must be %f", i, j, arr.Arr[i][j])
 			}
 		}
+	}
+
+	res = arr.Roll(3, 6)
+	for i := 0; i < nRow; i++ {
+		for j := 0; j < nCol; j++ {
+			if math.Abs(res.Arr[i][j]-arr.Arr[i][j]) > 1e-9 {
+				fmt.Println(res.Arr, arr.Arr)
+				t.Errorf("Element at row %d and column %d must be %f", i, j, arr.Arr[i][j])
+			}
+		}
+	}
+
+	arr = Float64TwoDArray{}
+	if arr.Roll(1, 2).Err == nil {
+		t.Errorf("There must be ErrEmptyArray")
 	}
 }
 
