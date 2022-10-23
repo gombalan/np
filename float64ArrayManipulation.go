@@ -47,7 +47,6 @@ func (a Float64OneDArray) Roll(k int) Float64OneDArray {
 		} else {
 			result[i] = a.Arr[(i-k)%(*len)]
 		}
-
 	}
 
 	return Float64OneDArray{Arr: result}
@@ -187,16 +186,12 @@ func (a Float64TwoDArray) Tril(k int) Float64TwoDArray {
 		return Float64TwoDArray{nil, newError(ErrNonRectangularArray, fmt.Sprintf("array should be rectangular, but value of nRow: %v and nCol: %v are different", *shape.NRow, *shape.NCol))}
 	}
 
-	if k > 0 {
-		if k >= *shape.NCol {
-			return Float64TwoDArray{nil, newError(ErrInvalidParameter, fmt.Sprintf("value of k: %v should be less than nRow: %v", k, *shape.NRow))}
-		}
+	if k > 0 && k >= *shape.NCol {
+		return Float64TwoDArray{nil, newError(ErrInvalidParameter, fmt.Sprintf("value of k: %v should be less than nRow: %v", k, *shape.NRow))}
 	}
 
-	if k < 0 {
-		if -k >= *shape.NCol {
-			return Float64TwoDArray{nil, newError(ErrInvalidParameter, fmt.Sprintf("value of -k: %v should be less than nRow: %v", k, -1*(*shape.NRow)))}
-		}
+	if k < 0 && -k >= *shape.NCol {
+		return Float64TwoDArray{nil, newError(ErrInvalidParameter, fmt.Sprintf("value of -k: %v should be less than nRow: %v", k, -1*(*shape.NRow)))}
 	}
 
 	result := make([][]float64, *shape.NRow)
@@ -207,6 +202,40 @@ func (a Float64TwoDArray) Tril(k int) Float64TwoDArray {
 				result[i][j] = a.Arr[i][j]
 			} else {
 				result[i][j] = 0
+			}
+		}
+	}
+
+	return Float64TwoDArray{result, nil}
+}
+
+func (a Float64TwoDArray) Roll(j int, k int) Float64TwoDArray {
+	if err := validateArray(a.Err, len(a.Arr)); err != nil {
+		return Float64TwoDArray{nil, propagateError(err, "failed to roll array")}
+	}
+
+	shape, _ := a.Shape()
+	j, k = j%(*shape.NRow), k%(*shape.NCol)
+	if j == 0 && k == 0 {
+		return a
+	}
+
+	result := make([][]float64, *shape.NRow)
+	for m := 0; m < *shape.NRow; m++ {
+		result[m] = make([]float64, *shape.NCol)
+		for n := 0; n < *shape.NCol; n++ {
+			if m-j < 0 {
+				if n-k < 0 {
+					result[m][n] = a.Arr[(m-j+*shape.NRow)%(*shape.NRow)][(n-k+*shape.NCol)%(*shape.NCol)]
+				} else {
+					result[m][n] = a.Arr[(m-j+*shape.NRow)%(*shape.NRow)][(n-k)%(*shape.NCol)]
+				}
+			} else {
+				if n-k < 0 {
+					result[m][n] = a.Arr[(m-j)%(*shape.NRow)][(n-k+*shape.NCol)%(*shape.NCol)]
+				} else {
+					result[m][n] = a.Arr[(m-j)%(*shape.NRow)][(n-k)%(*shape.NCol)]
+				}
 			}
 		}
 	}

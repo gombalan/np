@@ -43,6 +43,14 @@ func TestRollFloat64OneD(t *testing.T) {
 		}
 	}
 
+	arr = Float64OneDArray{Arr: []float64{1, 2, 3, 4, 5, 6}}
+	arr = arr.Roll(8)
+	for i := 0; i < 6; i++ {
+		if res.Arr[i] != arr.Arr[i] {
+			t.Errorf("Element at index %d must be %f", i, arr.Arr[i])
+		}
+	}
+
 	res = arr.Roll(-2)
 	arr = Float64OneDArray{Arr: []float64{1, 2, 3, 4, 5, 6}}
 	for i := 0; i < 6; i++ {
@@ -50,6 +58,20 @@ func TestRollFloat64OneD(t *testing.T) {
 			t.Errorf("Element at index %d must be %f", i, arr.Arr[i])
 		}
 	}
+
+	res = arr.Roll(0)
+	arr = arr.Roll(6)
+	for i := 0; i < 6; i++ {
+		if res.Arr[i] != arr.Arr[i] {
+			t.Errorf("Element at index %d must be %f", i, arr.Arr[i])
+		}
+	}
+
+	arr = Float64OneDArray{}
+	if arr.Roll(3).Err == nil {
+		t.Errorf("There must be ErrEmptyArray")
+	}
+
 }
 
 func TestReshapeFloat64TwoD(t *testing.T) {
@@ -284,6 +306,21 @@ func TestTrilFloat64TwoD(t *testing.T) {
 	res = Float64OneDArray{Arr: []float64{1, 1, 1, 3, 4, 7, 2, 6, 4}}.Reshape(3, 3).Tril(5)
 	if res.Err == nil {
 		t.Errorf("There must be ErrInvalidParameter")
+	}
+}
+
+func TestRollFloat64TwoD(t *testing.T) {
+	res := Float64OneDArray{Arr: []float64{1, 2, 3, 4, 5, 6, 7, 8, 9}}.Reshape(3, 3).Roll(1, 1)
+	arr := Float64OneDArray{Arr: []float64{9, 7, 8, 3, 1, 2, 6, 4, 5}}.Reshape(3, 3)
+
+	nRow, nCol := len(arr.Arr), len(arr.Arr)
+	for i := 0; i < nRow; i++ {
+		for j := 0; j < nCol; j++ {
+			if math.Abs(res.Arr[i][j]-arr.Arr[i][j]) > 1e-9 {
+				fmt.Println(res.Arr, arr.Arr)
+				t.Errorf("Element at row %d and column %d must be %f", i, j, arr.Arr[i][j])
+			}
+		}
 	}
 }
 
